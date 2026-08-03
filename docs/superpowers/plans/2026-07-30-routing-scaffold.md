@@ -2,9 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 为 WorkBench 接入 `react-router-dom`，形成带 Layout、Home、Demo、404 的 SPA 路由脚手架，且 `basename` 与 Vite `base` 对齐。
+**Goal:** 为 WorkBench 接入 `react-router-dom`，形成带 Layout、Home、Workbench、RegexSettings、404 的 SPA 路由脚手架，且 `basename` 与 Vite `base` 对齐。
 
 **Architecture:** `createBrowserRouter` + `RouterProvider`；根 route 为 `App` Layout（导航 + `Outlet`）；页面放在 `src/pages/*`；现有欢迎页迁入 `Home`。
+
+**修订（2026-07-31）：** 移除 Demo；新增 `Workbench`（占位）、`RegexSettings`（模拟表格）；顶栏为「首页 / 工作台 / 正则设置」。
 
 **Tech Stack:** React 19、Vite 8、`react-router-dom`（与 React 19 兼容的当前大版本）、Less CSS Modules
 
@@ -23,7 +25,8 @@
 | `src/main.tsx` | `RouterProvider` 挂载 |
 | `src/App.tsx` / `src/App.less` | Layout：导航 + Outlet |
 | `src/pages/Home/index.tsx` + `index.less` | 原 App 业务内容 |
-| `src/pages/Demo/index.tsx` | 示例页 |
+| `src/pages/Workbench/index.tsx` | 工作台占位 |
+| `src/pages/RegexSettings/index.tsx` | 正则白名单模拟表格 |
 | `src/pages/NotFound/index.tsx` | 404 |
 
 ---
@@ -269,10 +272,11 @@ Expected: `tsc -b` 与 `vite build` 成功。
 
 - [ ] **Step 2: 开发态手工验证（若 dev 已开或可短时启动）**
 
-- 打开 `/`，见首页内容与顶栏「首页 / Demo」
-- 点 Demo → URL 为 `/demo`，页面切换无整页刷新
+- 打开 `/`，见首页内容与顶栏「首页 / 工作台 / 正则设置」
+- 点工作台 → URL 为 `/workbench`，页面切换无整页刷新（占位可为空）
+- 点正则设置 → `/regex-settings`，见模拟数据表格
 - 访问 `/not-exist-xyz` → 404
-- 在 `/demo` 刷新 → 仍为 Demo（Vite history fallback）
+- 在 `/regex-settings` 刷新 → 仍为该页（Vite history fallback）
 
 ---
 
@@ -283,7 +287,12 @@ Expected: `tsc -b` 与 `vite build` 成功。
 | 安装 react-router-dom | Task 1 |
 | createBrowserRouter + basename | Task 5 |
 | Home 迁入现有内容 | Task 2 |
-| Demo / NotFound | Task 3 |
+| Workbench / RegexSettings / NotFound | Task 3（历史为 Demo；2026-07-31 已替换） |
 | Layout 导航 + Outlet | Task 4 |
 | main 使用 RouterProvider | Task 5 |
 | 本机验证 | Task 6 |
+
+## 已知实现注意点
+
+- 已删除 `src/pages/Demo`；勿再引用 `/demo`
+- 正则设置页无 antd，使用原生 `<table>` + 页面内常量模拟数据

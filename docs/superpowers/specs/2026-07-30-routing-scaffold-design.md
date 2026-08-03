@@ -1,7 +1,7 @@
 # WorkBench 路由脚手架设计
 
 日期：2026-07-30  
-状态：已确认（待实现）
+状态：已实现（2026-07-31 修订：业务路由；2026-08-03 修订：多 Layout 兄弟分支）
 
 ## 目标
 
@@ -9,7 +9,7 @@
 
 ### 成功标准
 
-- `/`、`/demo` 支持客户端跳转；未知路径进入 404
+- `/`、`/workbench`、`/regex-settings` 支持客户端跳转；未知路径进入 404
 - `basename` 与 Vite `base`（`import.meta.env.BASE_URL`）对齐，子路径部署时主要改 `vite.config` 的 `base`
 - 现有欢迎页 + 请求示例仍在首页可用
 
@@ -18,10 +18,11 @@
 - 不做路由懒加载、`loader`/`action`
 - 不做权限路由、菜单配置中心
 - 不改 Nginx/生产 rewrite 文档以外的部署工程（仅在实现说明中提示 History 模式需回退到 `index.html`）
+- 正则设置页 CRUD 与 mock API 详见 `2026-07-31-regex-settings-antd-crud-design.md`（本规格仅定义路由挂载）
 
 ## 技术方案
 
-- 依赖：新增 `react-router-dom`（与当前 React 19 兼容的大版本）
+- 依赖：`react-router-dom`（与当前 React 19 兼容的大版本）
 - API：`createBrowserRouter` + `RouterProvider`（History 模式）
 - `basename`：由 `import.meta.env.BASE_URL` 推导（去掉尾部 `/`；根路径为空或按库约定处理），与 Vite `base` 联动
 - Vite `base`：当前保持默认 `'/'`；日后子路径部署改为如 `'/workbench/'` 即可
@@ -31,49 +32,56 @@
 ```
 src/
   main.tsx                 # 挂载 RouterProvider
-  App.tsx                  # 根 Layout：简单导航 + Outlet
-  App.less                 # Layout 样式（若需要极简导航样式）
+  layouts/
+    MainLayout/            # 顶栏壳
+    WorkbenchLayout/       # 工作台侧栏壳
+    BlankLayout/           # 无导航壳
   router/
-    index.tsx              # createBrowserRouter 路由表
+    index.tsx              # createBrowserRouter 路由表（多 Layout 分支）
   pages/
     Home/
-      index.tsx            # 由现有 App 业务内容迁入
-      index.less           # 现有 App.less 整文件迁入（首页专用）
-    Demo/
-      index.tsx            # 极简示例页
+    Workbench/
+    RegexSettings/
     NotFound/
-      index.tsx            # 404
+    BlankPlaceholder/      # /blank 挂点占位
 ```
-
-说明：现有 `App.less` 随首页迁到 `pages/Home/index.less`。Layout 导航若需样式，新建极简规则（可写在 `App.less` 或内联 class），不与首页样式混用。
 
 ## 路由表
 
-| 路径 | 组件 | 说明 |
-|------|------|------|
-| `/` | Layout → Home | 现有欢迎页 + 请求示例 |
-| `/demo` | Layout → Demo | 极简示例，含返回首页链接 |
-| `*` | Layout → NotFound | 未知路径 |
+| 路径 | Layout | 页面 | 说明 |
+|------|--------|------|------|
+| `/` | MainLayout | Home | 现有欢迎页 + 请求示例 |
+| `/regex-settings` | MainLayout | RegexSettings | 正则白名单设置（Antd 管理页，mock API） |
+| `*`（MainLayout 下） | MainLayout | NotFound | 未知路径 |
+| `/workbench` | WorkbenchLayout | Workbench | 工作台占位页 |
+| `/blank` | BlankLayout | BlankPlaceholder | 预留挂点，详见 `2026-08-03-multi-layout-design.md` |
 
-嵌套关系：根 route `element: <App />`（Layout），`children` 为上述三个页面；子路由通过 `<Outlet />` 渲染。
+嵌套关系：`createBrowserRouter` 下并列三个 Layout 兄弟分支（MainLayout / WorkbenchLayout / BlankLayout），各自 `children` 挂业务页；子路由通过 `<Outlet />` 渲染。原单一 `App` 根 Layout 已删除。
+
+已移除：`/demo`（Demo 示例页）；`App.tsx` / `App.less`（2026-08-03 多 Layout 重构）。
 
 ## 数据流与错误处理
 
-- `main.tsx` 只负责 `StrictMode` + `RouterProvider`，不再直接渲染整页业务内容
-- Layout（`App`）提供顶部 `Link`（首页、Demo）与 `<Outlet />`
+- `main.tsx` 只负责 `StrictMode` + `ConfigProvider` + `RouterProvider`
+- `MainLayout` 提供顶部 `Link`（首页、工作台、正则设置）与 `<Outlet />`；`WorkbenchLayout` / `BlankLayout` 各自负责壳 UI 与 `<Outlet />`
 - 页面同步 import，暂不 `lazy` / `Suspense`
-- 路由级：仅 404；接口错误仍由首页现有 `useRequest` 逻辑处理
+- 路由级：MainLayout 下 `*` → NotFound；接口错误仍由首页现有 `useRequest` 逻辑处理
+- 正则设置页为 Antd 管理页 Demo，数据经 `src/apis/regex/**` mock API（见 `2026-07-31-regex-settings-antd-crud-design.md`）
 
 ## 实现要点
 
-1. 安装 `react-router-dom`
-2. 新增 `src/router/index.tsx` 导出 `router`
-3. 将现有 `App.tsx` 业务 JSX/状态迁入 `pages/Home`；`App.tsx` 改为 Layout
-4. 新增 `Demo`、`NotFound` 页面
-5. 更新 `main.tsx` 使用 `RouterProvider`
-6. 本机验证：导航 Link、直接访问 `/demo`、访问未知路径、刷新页面仍由 Vite 正确返回前端（dev 已支持）
+1. 已安装 `react-router-dom`
+2. `src/router/index.tsx` 导出 `router`
+3. Layout 导航指向业务路由
+4. 工作台仅占位；正则设置页为 Antd CRUD Demo（筛选、分页、新建/编辑/删除、行内启停），数据走 mock API
 
 ## 风险与约束
 
-- History 模式生产部署需服务器对未知路径回退到 `index.html`；本脚手架不改服务器配置
-- `BASE_URL` 与 `basename` 尾部斜杠处理不一致会导致子路径下匹配失败，实现时需按 react-router 文档规范化
+- History 模式生产部署需服务器对未知路径回退到 `index.html`
+- `BASE_URL` 与 `basename` 尾部斜杠处理不一致会导致子路径下匹配失败
+
+## 修订记录
+
+- 2026-07-31：移除 Demo；新增 `/workbench`、`/regex-settings`；顶栏导航同步更新。
+- 2026-07-31：正则页升级为 Antd CRUD Demo（见 `2026-07-31-regex-settings-antd-crud-design.md`）。
+- 2026-08-03：根 Layout 拆为 MainLayout / WorkbenchLayout / BlankLayout 兄弟分支；详见 `2026-08-03-multi-layout-design.md`。`App.tsx` 已删除。
