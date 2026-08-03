@@ -19,3 +19,15 @@ export const HttpStatus = {
 } as const
 
 export type HttpStatusCode = (typeof HttpStatus)[keyof typeof HttpStatus]
+
+/** 分页查询公共入参（对齐 ahooks usePagination / useAntdTable） */
+export interface PageParams {
+  current: number
+  pageSize: number
+}
+
+/** 分页列表公共出参（API 返回给页面的形状） */
+export interface PageResult<T> {
+  list: T[]
+  total: number
+}
