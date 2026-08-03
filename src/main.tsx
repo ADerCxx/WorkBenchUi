@@ -8,7 +8,14 @@ import './styles/index.global.less'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider
+      locale={zhCN}
+      theme={{
+        token: {
+          colorPrimary: '#aa3bff',
+        },
+      }}
+    >
       <RouterProvider router={router} />
     </ConfigProvider>
   </StrictMode>,
