@@ -1,0 +1,17 @@
+---
+description: Use when finishing WorkBench code changes — run lint/build before claiming done.
+globs: src/**/*.{ts,tsx,js,jsx,mts,cts}
+alwaysApply: false
+---
+
+# 改完代码先验证
+
+改动了 `src` 下业务代码后、向用户宣称「完成 / 已修好 / 可通过」之前：
+
+1. 执行 `npm run lint`（至少覆盖本次改动相关问题；失败先修再声称完成）
+2. 若改动涉及类型、接口、`tsconfig`、构建入口或依赖，再执行 `npm run build`
+3. 用命令输出作为依据；未跑命令不得声称通过
+
+**不要：** 未经用户明确要求，全仓执行 `npm run lint:fix` 或 `npm run format`。
+
+格式化靠 IDE / Prettier 即可；本规则管的是 **lint 与类型构建门禁**，不是「ESLint 初始化手册」。
