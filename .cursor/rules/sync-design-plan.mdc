@@ -1,0 +1,42 @@
+---
+description: superPowers 模块变更时同步更新 design 与 plan 文档；编辑业务页面、apis、router、superpowers 文档时适用
+globs:
+  - "src/pages/**"
+  - "src/apis/**"
+  - "src/router/**"
+  - "docs/superpowers/**"
+alwaysApply: false
+---
+
+# superPowers：design / plan 同步（硬约束）
+
+设计/计划是 superPowers 的**单一事实来源**。凡触发下列场景，**同一轮对话内**必须回写 design + plan，不得只改代码。
+
+## 何时必须同步
+
+- 用户调整需求/UI/字段/验收标准
+- 实现与 design/plan 不一致（组件、样式、API、命名等）
+- 新增/删除/重命名文件、API、mock、i18n key
+
+**不触发**：纯 bugfix 且与文档一致；仅格式化/注释；与 superPowers 模块无关的全局改动。
+
+## 文档路径
+
+```
+docs/superpowers/specs/YYYY-MM-DD-<模块>-design.md
+docs/superpowers/plans/YYYY-MM-DD-<模块>.md
+```
+
+从业务代码改动路径反查模块；在 `docs/superpowers/` 按关键词搜索。找不到则询问用户或说明「无 superPowers 文档，跳过同步」。
+
+## 回复前自检（5 项）
+
+- [ ] 已打开对应 `specs/*-design.md` 与 `plans/*.md`
+- [ ] design 相关章节（决策/UI/字段/验收）已更新
+- [ ] plan 对应 Task（代码片段、`Expected`、注意点）已更新
+- [ ] design 文末修订记录（或 plan 末尾）已追加本条变更（日期 + 摘要）
+- [ ] 已向用户简要列出：改了哪些文件 + 同步了哪些文档
+
+**禁止**：只改 plan 不改 design；只改 design 不改 plan。
+
+详细工作流、分工表、命名约定见 Skill：`.cursor/skills/sync-design-plan/SKILL.md`
