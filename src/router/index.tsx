@@ -1,6 +1,5 @@
 import BlankLayout from '@/layouts/BlankLayout';
 import MainLayout from '@/layouts/MainLayout';
-import WorkbenchLayout from '@/layouts/WorkbenchLayout';
 import BlankPlaceholder from '@/pages/BlankPlaceholder';
 import Home from '@/pages/Home';
 import NotFound from '@/pages/NotFound';
@@ -32,7 +31,7 @@ export const router = createBrowserRouter(
     },
     {
       path: '/workbench',
-      element: <WorkbenchLayout />,
+      element: <BlankLayout />,
       children: [{ index: true, element: <Workbench /> }],
     },
     {
