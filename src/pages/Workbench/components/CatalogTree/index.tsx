@@ -12,6 +12,7 @@ function CatalogTree({
   treeData,
   selectedPath,
   onSelectFile,
+  emptyDescription = '未扫描到匹配的白名单文件',
 }: CatalogTreeProps) {
   if (loading) {
     return (
@@ -35,7 +36,7 @@ function CatalogTree({
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description="未扫描到 .md / .mdc"
+        description={emptyDescription}
         style={{ marginTop: 48 }}
       />
     );

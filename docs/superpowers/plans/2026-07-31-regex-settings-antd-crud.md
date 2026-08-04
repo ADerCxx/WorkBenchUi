@@ -695,3 +695,7 @@ git commit -m "docs: update routing spec for regex settings CRUD"
 - 扩展 `.cursor/skills/workbench-api-request`（含 `PageParams`/`PageResult` 类型落地）
 - 新增 `antd-admin-crud-page` Skill
 - 真实后端联调、git push
+
+## 修订记录
+
+- 2026-08-04：真实后端联调已另开 `2026-08-04-regex-settings-api-integration`；本 plan 的 `src/apis/regex/**` mock 路径已废弃

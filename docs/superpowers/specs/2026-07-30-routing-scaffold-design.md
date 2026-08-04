@@ -18,7 +18,7 @@
 - 不做路由懒加载、`loader`/`action`
 - 不做权限路由、菜单配置中心
 - 不改 Nginx/生产 rewrite 文档以外的部署工程（仅在实现说明中提示 History 模式需回退到 `index.html`）
-- 正则设置页 CRUD 与 mock API 详见 `2026-07-31-regex-settings-antd-crud-design.md`（本规格仅定义路由挂载）
+- 正则设置页 CRUD 详见 `2026-07-31-regex-settings-antd-crud-design.md`；真实接口联调见 `2026-08-04-regex-settings-api-integration-design.md`（本规格仅定义路由挂载）
 
 ## 技术方案
 
@@ -51,7 +51,7 @@ src/
 | 路径 | Layout | 页面 | 说明 |
 |------|--------|------|------|
 | `/` | MainLayout | Home | 现有欢迎页 + 请求示例 |
-| `/regex-settings` | MainLayout | RegexSettings | 正则白名单设置（Antd 管理页，mock API） |
+| `/regex-settings` | MainLayout | RegexSettings | 正则白名单设置（Antd 管理页，对接 `/regexRules`） |
 | `*`（MainLayout 下） | MainLayout | NotFound | 未知路径 |
 | `/workbench` | WorkbenchLayout | Workbench | 工作台占位页 |
 | `/blank` | BlankLayout | BlankPlaceholder | 预留挂点，详见 `2026-08-03-multi-layout-design.md` |
@@ -66,14 +66,14 @@ src/
 - `MainLayout` 提供顶部 `Link`（首页、工作台、正则设置）与 `<Outlet />`；`WorkbenchLayout` / `BlankLayout` 各自负责壳 UI 与 `<Outlet />`
 - 页面同步 import，暂不 `lazy` / `Suspense`
 - 路由级：MainLayout 下 `*` → NotFound；接口错误仍由首页现有 `useRequest` 逻辑处理
-- 正则设置页为 Antd 管理页 Demo，数据经 `src/apis/regex/**` mock API（见 `2026-07-31-regex-settings-antd-crud-design.md`）
+- 正则设置页为 Antd 管理页，数据经 `src/apis/regexRules/**` 对接后端（见 `2026-08-04-regex-settings-api-integration-design.md`）
 
 ## 实现要点
 
 1. 已安装 `react-router-dom`
 2. `src/router/index.tsx` 导出 `router`
 3. Layout 导航指向业务路由
-4. 工作台仅占位；正则设置页为 Antd CRUD Demo（筛选、分页、新建/编辑/删除、行内启停），数据走 mock API
+4. 工作台仅占位；正则设置页为 Antd CRUD（筛选、分页、新建/编辑/删除、行内启停），数据对接 `/regexRules`
 
 ## 风险与约束
 

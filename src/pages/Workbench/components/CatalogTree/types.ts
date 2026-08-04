@@ -6,4 +6,6 @@ export type CatalogTreeProps = {
   treeData: WorkbenchTreeNode[];
   selectedPath: string | null;
   onSelectFile: (path: string) => void;
+  /** 零命中时的空态文案 */
+  emptyDescription?: string;
 };

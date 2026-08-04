@@ -1,9 +1,12 @@
-import { RegexCreateApi } from '@/apis/regex/create';
-import { RegexDeleteApi } from '@/apis/regex/delete';
-import { RegexListApi } from '@/apis/regex/list';
-import { RegexToggleApi } from '@/apis/regex/toggle';
-import type { RegexListForm, RegexRule } from '@/apis/regex/types';
-import { RegexUpdateApi } from '@/apis/regex/update';
+import { RegexRulesDeleteApi } from '@/apis/regexRules/delete';
+import { RegexRulesInsertApi } from '@/apis/regexRules/insert';
+import { RegexRulesQueryApi } from '@/apis/regexRules/query';
+import {
+  RegexRuleEnableStatus,
+  type RegexRule,
+  type RegexRulesQueryForm,
+} from '@/apis/regexRules/types';
+import { RegexRulesUpdateApi } from '@/apis/regexRules/update';
 import { useAntdTable, useRequest } from 'ahooks';
 import {
   Button,
@@ -22,11 +25,11 @@ import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 
 /**
- * 校验正则字面量是否可编译
+ * 校验文件正则字面量是否可编译
  */
-function validatePattern(_: unknown, value: string) {
+function validateFilePattern(_: unknown, value: string) {
   if (!value) {
-    return Promise.reject(new Error('请输入正则'));
+    return Promise.reject(new Error('请输入文件正则'));
   }
   try {
     new RegExp(value);
@@ -37,40 +40,56 @@ function validatePattern(_: unknown, value: string) {
 }
 
 /**
- * 正则表达式设置：扫描文件夹白名单（Antd CRUD Demo）
+ * 目录名：非空 trim
+ */
+function validateFolderName(_: unknown, value: string) {
+  if (!value?.trim()) {
+    return Promise.reject(new Error('请输入目录名'));
+  }
+  return Promise.resolve();
+}
+
+/**
+ * 正则表达式设置：扫描文件夹白名单（对接 /regexRules）
  */
 function RegexSettings() {
-  const [filterForm] = Form.useForm<RegexListForm>();
+  const [filterForm] = Form.useForm<RegexRulesQueryForm>();
   const [editForm] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<RegexRule | null>(null);
 
-  const { tableProps, search, refresh } = useAntdTable(RegexListApi, {
+  const { tableProps, search, refresh } = useAntdTable(RegexRulesQueryApi, {
     form: filterForm,
     defaultPageSize: 10,
   });
 
-  const { run: runCreate, loading: creating } = useRequest(RegexCreateApi, {
-    manual: true,
-    onSuccess: () => {
-      message.success('已新建');
-      setOpen(false);
-      refresh();
+  const { run: runCreate, loading: creating } = useRequest(
+    RegexRulesInsertApi,
+    {
+      manual: true,
+      onSuccess: () => {
+        message.success('已新建');
+        setOpen(false);
+        refresh();
+      },
+      onError: (e) => message.error(e.message),
     },
-    onError: (e) => message.error(e.message),
-  });
+  );
 
-  const { run: runUpdate, loading: updating } = useRequest(RegexUpdateApi, {
-    manual: true,
-    onSuccess: () => {
-      message.success('已保存');
-      setOpen(false);
-      refresh();
+  const { run: runUpdate, loading: updating } = useRequest(
+    RegexRulesUpdateApi,
+    {
+      manual: true,
+      onSuccess: () => {
+        message.success('已保存');
+        setOpen(false);
+        refresh();
+      },
+      onError: (e) => message.error(e.message),
     },
-    onError: (e) => message.error(e.message),
-  });
+  );
 
-  const { run: runDelete } = useRequest(RegexDeleteApi, {
+  const { run: runDelete } = useRequest(RegexRulesDeleteApi, {
     manual: true,
     onSuccess: () => {
       message.success('已删除');
@@ -79,7 +98,7 @@ function RegexSettings() {
     onError: (e) => message.error(e.message),
   });
 
-  const { run: runToggle } = useRequest(RegexToggleApi, {
+  const { run: runToggle } = useRequest(RegexRulesUpdateApi, {
     manual: true,
     onSuccess: () => {
       message.success('已更新启停');
@@ -91,7 +110,7 @@ function RegexSettings() {
   const openCreate = () => {
     setEditing(null);
     editForm.resetFields();
-    editForm.setFieldsValue({ enabled: true });
+    editForm.setFieldsValue({ enableStatus: RegexRuleEnableStatus.Enable });
     setOpen(true);
   };
 
@@ -103,34 +122,52 @@ function RegexSettings() {
 
   const submitEdit = async () => {
     const values = await editForm.validateFields();
+    const payload = {
+      ...values,
+      folderName: String(values.folderName ?? '').trim(),
+    };
     if (editing) {
-      runUpdate({ id: editing.id, ...values });
+      runUpdate({ id: editing.id, ...payload });
     } else {
-      runCreate(values);
+      runCreate(payload);
     }
   };
 
   const columns: ColumnsType<RegexRule> = [
-    { title: '名称', dataIndex: 'name', width: 160 },
+    { title: '名称', dataIndex: 'ruleName', width: 160 },
     {
-      title: '正则',
-      dataIndex: 'pattern',
+      title: '目录名',
+      dataIndex: 'folderName',
+      width: 140,
+      ellipsis: true,
+      render: (v: string) => <Typography.Text code>{v}</Typography.Text>,
+    },
+    {
+      title: '文件正则',
+      dataIndex: 'filePattern',
       ellipsis: true,
       render: (v: string) => <Typography.Text code>{v}</Typography.Text>,
     },
     { title: '说明', dataIndex: 'description', ellipsis: true },
     {
       title: '启用',
-      dataIndex: 'enabled',
+      dataIndex: 'enableStatus',
       width: 90,
-      render: (enabled: boolean, row) => (
+      render: (enableStatus: RegexRule['enableStatus'], row) => (
         <Switch
-          checked={enabled}
-          onChange={(checked) => runToggle({ id: row.id, enabled: checked })}
+          checked={enableStatus === RegexRuleEnableStatus.Enable}
+          onChange={(checked) =>
+            runToggle({
+              id: row.id,
+              enableStatus: checked
+                ? RegexRuleEnableStatus.Enable
+                : RegexRuleEnableStatus.Disable,
+            })
+          }
         />
       ),
     },
-    { title: '更新时间', dataIndex: 'updatedAt', width: 120 },
+    { title: '更新时间', dataIndex: 'updateTime', width: 180 },
     {
       title: '操作',
       key: 'actions',
@@ -142,7 +179,7 @@ function RegexSettings() {
           </Button>
           <Popconfirm
             title="确认删除该规则？"
-            onConfirm={() => runDelete({ id: row.id })}
+            onConfirm={() => runDelete({ ids: [row.id] })}
           >
             <Button type="link" size="small" danger>
               删除
@@ -167,7 +204,7 @@ function RegexSettings() {
             正则表达式设置
           </Typography.Title>
           <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-            用于扫描文件夹的白名单规则（Demo，数据为内存 mock）。
+            用于扫描文件夹的白名单（目录名 + 文件正则）。
           </Typography.Paragraph>
         </div>
         <Button type="primary" onClick={openCreate}>
@@ -176,17 +213,17 @@ function RegexSettings() {
       </Space>
 
       <Form form={filterForm} layout="inline" style={{ marginBottom: 16 }}>
-        <Form.Item name="name" label="名称">
+        <Form.Item name="ruleNameSearchParam" label="名称">
           <Input allowClear placeholder="关键字" style={{ width: 180 }} />
         </Form.Item>
-        <Form.Item name="enabled" label="启用">
+        <Form.Item name="enableStatus" label="启用">
           <Select
             allowClear
             placeholder="全部"
             style={{ width: 120 }}
             options={[
-              { label: '启用', value: true },
-              { label: '停用', value: false },
+              { label: '启用', value: RegexRuleEnableStatus.Enable },
+              { label: '停用', value: RegexRuleEnableStatus.Disable },
             ]}
           />
         </Form.Item>
@@ -212,23 +249,43 @@ function RegexSettings() {
       >
         <Form form={editForm} layout="vertical" style={{ marginTop: 8 }}>
           <Form.Item
-            name="name"
+            name="ruleName"
             label="名称"
             rules={[{ required: true, message: '请输入名称' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="pattern"
-            label="正则"
-            rules={[{ required: true, validator: validatePattern }]}
+            name="folderName"
+            label="目录名"
+            rules={[{ required: true, validator: validateFolderName }]}
+            extra="项目根下第一层目录名，如 .cursor、docs"
           >
-            <Input.TextArea rows={3} placeholder="正则字面量，勿包首尾斜杠" />
+            <Input placeholder=".cursor" />
+          </Form.Item>
+          <Form.Item
+            name="filePattern"
+            label="文件正则"
+            rules={[{ required: true, validator: validateFilePattern }]}
+            extra="匹配文件名格式，勿包首尾斜杠"
+          >
+            <Input.TextArea rows={2} placeholder="\.mdc?$" />
           </Form.Item>
           <Form.Item name="description" label="说明">
             <Input.TextArea rows={2} />
           </Form.Item>
-          <Form.Item name="enabled" label="启用" valuePropName="checked">
+          <Form.Item
+            name="enableStatus"
+            label="启用"
+            getValueFromEvent={(checked: boolean) =>
+              checked
+                ? RegexRuleEnableStatus.Enable
+                : RegexRuleEnableStatus.Disable
+            }
+            getValueProps={(value: RegexRule['enableStatus']) => ({
+              checked: value === RegexRuleEnableStatus.Enable,
+            })}
+          >
             <Switch />
           </Form.Item>
         </Form>

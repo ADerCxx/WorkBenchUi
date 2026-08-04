@@ -1,9 +1,6 @@
-import {
-  isConventionRootName,
-  isTargetMarkdown,
-  shouldSkipDirName,
-} from './pathMatch';
 import type { RawFile } from './types';
+import type { CompiledWhitelistRule } from './whitelistMatch';
+import { matchesFileName, rulesForRootDir } from './whitelistMatch';
 
 async function readFileHandle(
   handle: FileSystemFileHandle,
@@ -18,21 +15,22 @@ async function readFileHandle(
   }
 }
 
-async function walkDir(
+/** 已进入白名单根目录后：递归全部子目录，仅按文件名正则过滤 */
+async function walkUnderRoot(
   dir: FileSystemDirectoryHandle,
   prefix: string,
+  rules: CompiledWhitelistRule[],
   out: RawFile[],
 ): Promise<void> {
   for await (const [name, handle] of dir.entries()) {
-    const rel = prefix ? `${prefix}/${name}` : name;
+    const rel = `${prefix}/${name}`;
 
     if (handle.kind === 'directory') {
-      if (shouldSkipDirName(name)) continue;
-      await walkDir(handle, rel, out);
+      await walkUnderRoot(handle, rel, rules, out);
       continue;
     }
     if (handle.kind !== 'file') continue;
-    if (!isTargetMarkdown(name)) continue;
+    if (!matchesFileName(name, rules)) continue;
 
     const raw = await readFileHandle(handle, rel);
     if (raw) out.push(raw);
@@ -40,18 +38,21 @@ async function walkDir(
 }
 
 /**
- * 仅扫描项目根第一层约定目录内的 .md / .mdc。
- * 缺根静默跳过；不把「选中目录本身是约定根」当作主路径。
+ * 按启用白名单扫描：仅进入项目根下 folderName 命中的第一层目录。
  */
-export async function scanHardcodedRoots(
+export async function scanByWhitelist(
   projectRoot: FileSystemDirectoryHandle,
+  rules: CompiledWhitelistRule[],
 ): Promise<RawFile[]> {
+  if (rules.length === 0) return [];
+
   const out: RawFile[] = [];
 
   for await (const [name, handle] of projectRoot.entries()) {
     if (handle.kind !== 'directory') continue;
-    if (!isConventionRootName(name)) continue;
-    await walkDir(handle, name, out);
+    const matched = rulesForRootDir(name, rules);
+    if (matched.length === 0) continue;
+    await walkUnderRoot(handle, name, matched, out);
   }
 
   return out;
