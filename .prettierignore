@@ -8,3 +8,5 @@ pnpm-lock.yaml
 yarn.lock
 package-lock.json
 *.min.js
+*.md
+*.mdc
