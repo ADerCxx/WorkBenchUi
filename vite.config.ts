@@ -1,9 +1,9 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { defineConfig, type Plugin } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, type Plugin } from 'vite';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * 将普通 *.less 按 CSS Modules 处理；*.global.less 保持全局。
@@ -15,40 +15,40 @@ function lessAsCssModules(): Plugin {
     enforce: 'pre',
     async resolveId(source, importer, options) {
       if (source.includes('\0') || source.includes('node_modules')) {
-        return null
+        return null;
       }
       if (!/\.less(?:$|\?)/.test(source)) {
-        return null
+        return null;
       }
       if (/\.module\.less(?:$|\?)/.test(source)) {
-        return null
+        return null;
       }
       if (/\.global\.less(?:$|\?)/.test(source)) {
-        return null
+        return null;
       }
 
       const resolved = await this.resolve(source, importer, {
         ...options,
         skipSelf: true,
-      })
+      });
       if (!resolved || resolved.external) {
-        return resolved
+        return resolved;
       }
 
-      const [filepath, query = ''] = resolved.id.split('?')
+      const [filepath, query = ''] = resolved.id.split('?');
       if (/\.global\.less$/.test(filepath)) {
-        return resolved
+        return resolved;
       }
       if (/\.module\.less$/.test(filepath)) {
-        return resolved
+        return resolved;
       }
 
       const nextQuery = query
         ? `${query}&module=.module.less`
-        : 'module=.module.less'
-      return `${filepath}?${nextQuery}`
+        : 'module=.module.less';
+      return `${filepath}?${nextQuery}`;
     },
-  }
+  };
 }
 
 // https://vite.dev/config/
@@ -64,4 +64,17 @@ export default defineConfig({
       localsConvention: 'camelCaseOnly',
     },
   },
-})
+  server: {
+    proxy: {
+      // VITE_API_URL 为空时，相对路径接口转到后端（按域名前缀扩展）
+      '/regexRules': {
+        target: 'http://172.16.27.80:8889',
+        changeOrigin: true,
+      },
+      '/report': {
+        target: 'http://172.16.27.80:8889',
+        changeOrigin: true,
+      },
+    },
+  },
+});
