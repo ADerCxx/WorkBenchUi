@@ -1,0 +1,15 @@
+---
+description: WorkBench UI 样式默认 CSS Module + Less；编辑组件/样式时遵循 css-module-less skill。
+globs: src/**/*.{tsx,jsx,less}
+alwaysApply: false
+---
+
+# CSS Module + Less
+
+编辑 `src` 下组件或 Less 时：
+
+1. **先读并遵守**项目 Skill：`.cursor/skills/css-module-less/SKILL.md`
+2. 静态布局/视觉进同级 `index.less` + `className={styles.xxx}`；禁止大块 `style={{...}}`
+3. 仅运行时几何、真正动态单值等例外才内联（详见 skill）
+
+目录结构仍以 `module-file-layout` 为准；样式写法以 `css-module-less` 为准。

@@ -25,10 +25,10 @@ description: >-
 
 **When NOT to use**
 
-- 仅改 Less/CSS、Markdown、配置文件
+- 仅改样式写法/内联迁 Less → 用 `css-module-less`（本 skill 不管 class 与 `style` 取舍）
+- 仅改 Markdown、配置文件
 - 全局环境声明（`*.d.ts`）→ 不受本 skill 约束
 - 纯接口对接模板 → 用 `workbench-api-request`
-
 ---
 
 ## 核心约定：一模块一文件夹
@@ -42,12 +42,13 @@ description: >-
 ```text
 ModuleName/
 ├── index.tsx      # 对外入口（组件默认导出 / 业务主 API）
-├── index.less     # 可选：与入口同级的样式
+├── index.less     # 有布局/视觉时必有：CSS Module（写法见 css-module-less）
 ├── types.ts       # 较底层、可复用、对外的类型
 ├── constants.ts   # 可选
 └── ...            # 同模块内的实现文件（helpers、子逻辑）
 ```
 
+布局与视觉样式默认 **CSS Module + 同级 `index.less`**，禁止大块静态内联；完整约定见 **`css-module-less`**。
 含子组件时：
 
 ```text
@@ -200,6 +201,7 @@ export interface SharedScanOptions { /* ... */ }
 - [ ] 跨文件复用或需 export 的 `interface` 是否已迁入 `types.ts`？
 - [ ] 类型引用是否使用 `import type`？公开类型是否从入口 re-export？
 - [ ] 未为「好看」无谓搬迁稳定旧文件；膨胀或新建时才文件夹化？
+- [ ] 有 UI 的模块是否配备 `index.less`，且样式写法符合 `css-module-less`？
 
 ---
 
