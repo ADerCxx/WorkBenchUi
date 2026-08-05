@@ -1,0 +1,15 @@
+---
+description: WorkBench 字族/字重按角色变量；编辑样式时遵循 typography skill。
+globs: src/**/*.{tsx,jsx,less}
+alwaysApply: false
+---
+
+# Typography
+
+编辑 `src` 下组件或 Less 涉及字样时：
+
+1. **先读并遵守**项目 Skill：`.cursor/skills/typography/SKILL.md`
+2. 角色 → `var(--sans|--heading|--display|--mono)`；禁止硬编码字体族名
+3. 普通标题 `--heading` 700；仅品牌/Hero 用 `--display` 600；代码 `--mono`
+
+布局写法仍以 `css-module-less` 为准。

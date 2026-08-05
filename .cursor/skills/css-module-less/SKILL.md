@@ -58,8 +58,9 @@ function Example() {
 1. **默认 CSS Module**：`import styles from './index.less'`，用 `className={styles.xxx}`（或 `` className={`${styles.a} ${styles.b}`} `` / 条件拼接）。
 2. **文件位置**：样式与入口同级，名 `index.less`；不要散落无归属的全局 class（全局仅 `src/styles/*.global.less`）。
 3. **颜色/边框/背景**：优先 `var(--text)`、`var(--text-h)`、`var(--bg)`、`var(--border)`、`var(--accent)` 等已有变量（见 `src/styles/index.global.less`）；少写死 hex，除非无对应变量且 design 明确要求。
-4. **禁止**用内联对象写静态布局：`display`、`flex`、`gap`、`padding`、`margin`、`border`、`height`/`width`（定值）、`overflow` 等 —— 进 less。
-5. **类名**：camelCase（`.header`、`.title`、`.panelFullscreen`），与现有 `Home` / `AnalysisPanel` 一致；不用 BEM 长链除非已有文件如此。
+4. **字族/字重**：按角色用 `var(--sans|--heading|--display|--mono)`，详见 `typography` skill；禁止在组件 less 写死字体族名。
+5. **禁止**用内联对象写静态布局：`display`、`flex`、`gap`、`padding`、`margin`、`border`、`height`/`width`（定值）、`overflow` 等 —— 进 less。
+6. **类名**：camelCase（`.header`、`.title`、`.panelFullscreen`），与现有 `Home` / `AnalysisPanel` 一致；不用 BEM 长链除非已有文件如此。
 
 ---
 
@@ -154,3 +155,4 @@ function WorkbenchHeader() {
 - [ ] 颜色/边框是否优先用全局 CSS 变量？
 - [ ] 仅动态几何/动态单值才内联？
 - [ ] 未把组件 class 写进 `*.global.less`？
+- [ ] 字族/字重是否走 typography 角色变量？

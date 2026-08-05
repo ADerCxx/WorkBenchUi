@@ -13,6 +13,8 @@ createRoot(document.getElementById('root')!).render(
       theme={{
         token: {
           colorPrimary: '#1677ff',
+          fontFamily:
+            'Inter, "Noto Sans SC", system-ui, "Segoe UI", Roboto, sans-serif',
         },
       }}
     >
