@@ -55,11 +55,11 @@
 pages/Workbench/
   index.tsx                 # 增：analysisOpen / analysisMode 编排
   components/
-    WorkbenchHeader/        # 增：分析工具按钮（disabled 随 selectedPath）
+    WorkbenchHeader/        # 增：分析工具按钮（disabled 随 selectedPath）；样式见同级 index.less
     AnalysisPanel/          # 新建：浮窗壳
       index.tsx
       types.ts
-      index.less            # 可选；或沿用页级 less
+      index.less
 ```
 
 最小化胶囊可内联于 `AnalysisPanel`，或同目录小子组件；保持一模块一文件夹即可。
@@ -121,3 +121,4 @@ pages/Workbench/
 |------|------|
 | 2026-08-05 | Task 6 代码级验收通过；状态改为「已实现」。拖拽/缩放/胶囊等交互需浏览器冒烟确认。 |
 | 2026-08-05 | 顶栏品牌文案与 pick-folder 对齐：图标 +「知识织物工作台」（见 pick-folder design） |
+| 2026-08-05 | WorkbenchHeader 静态样式迁入同级 `index.less`（与 css-module-less 对齐） |

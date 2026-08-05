@@ -174,6 +174,7 @@ Expected: PASS（全部用例绿）。
 **Files:**
 - Modify: `src/pages/Workbench/components/WorkbenchHeader/types.ts`
 - Modify: `src/pages/Workbench/components/WorkbenchHeader/index.tsx`
+- Modify: `src/pages/Workbench/components/WorkbenchHeader/index.less`（若尚无则创建）
 
 - [ ] **Step 1: 扩展 props 类型**
 
@@ -192,11 +193,12 @@ export type WorkbenchHeaderProps = {
 
 - [ ] **Step 2: 渲染按钮（选文件夹在左，分析工具在右）**
 
-将 `index.tsx` 改为：
+静态布局进同级 `index.less`；`index.tsx`：
 
 ```tsx
 import { ExperimentOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
+import styles from './index.less';
 import type { WorkbenchHeaderProps } from './types';
 
 export type { WorkbenchHeaderProps } from './types';
@@ -212,31 +214,22 @@ function WorkbenchHeader({
   onOpenAnalysis,
 }: WorkbenchHeaderProps) {
   return (
-    <header
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 16,
-        padding: '12px 16px',
-        borderBottom: '1px solid var(--border)',
-      }}
-    >
-      <Space size="middle" align="center">
-        <Space size={8} align="center">
+    <header className={styles.header}>
+      <div className={styles.brandRow}>
+        <div className={styles.brand}>
           <img
+            className={styles.logo}
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
-            style={{ display: 'block', height: 28, width: 'auto' }}
           />
-          <Typography.Title level={4} style={{ margin: 0 }}>
+          <Typography.Title level={4} className={styles.title}>
             知识织物工作台
           </Typography.Title>
-        </Space>
+        </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}
-      </Space>
+      </div>
       <Space>
         <Button
           type="primary"
@@ -745,3 +738,4 @@ Expected: 测试通过；`tsc -b && vite build` 成功。
 | 日期 | 摘要 |
 |------|------|
 | 2026-08-05 | Task 3 Header 示例与实现对齐：顶栏 `fabricIcon` +「知识织物工作台」 |
+| 2026-08-05 | WorkbenchHeader 静态样式改为 CSS Module（`index.less`），去掉 `style={{}}` |

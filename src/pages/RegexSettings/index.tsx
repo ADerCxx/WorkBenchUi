@@ -23,6 +23,7 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
+import styles from './index.less';
 
 /**
  * 校验文件正则字面量是否可编译
@@ -191,19 +192,13 @@ function RegexSettings() {
   ];
 
   return (
-    <section style={{ padding: 24 }}>
-      <Space
-        style={{
-          width: '100%',
-          justifyContent: 'space-between',
-          marginBottom: 16,
-        }}
-      >
+    <section className={styles.page}>
+      <Space className={styles.toolbar}>
         <div>
-          <Typography.Title level={3} style={{ margin: 0 }}>
+          <Typography.Title level={3} className={styles.heading}>
             正则表达式设置
           </Typography.Title>
-          <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+          <Typography.Paragraph type="secondary" className={styles.desc}>
             用于扫描文件夹的白名单（目录名 + 文件正则）。
           </Typography.Paragraph>
         </div>
@@ -212,15 +207,19 @@ function RegexSettings() {
         </Button>
       </Space>
 
-      <Form form={filterForm} layout="inline" style={{ marginBottom: 16 }}>
+      <Form form={filterForm} layout="inline" className={styles.filterForm}>
         <Form.Item name="ruleNameSearchParam" label="名称">
-          <Input allowClear placeholder="关键字" style={{ width: 180 }} />
+          <Input
+            allowClear
+            placeholder="关键字"
+            className={styles.keywordInput}
+          />
         </Form.Item>
         <Form.Item name="enableStatus" label="启用">
           <Select
             allowClear
             placeholder="全部"
-            style={{ width: 120 }}
+            className={styles.enableSelect}
             options={[
               { label: '启用', value: RegexRuleEnableStatus.Enable },
               { label: '停用', value: RegexRuleEnableStatus.Disable },
@@ -247,7 +246,7 @@ function RegexSettings() {
         confirmLoading={creating || updating}
         destroyOnHidden
       >
-        <Form form={editForm} layout="vertical" style={{ marginTop: 8 }}>
+        <Form form={editForm} layout="vertical" className={styles.editForm}>
           <Form.Item
             name="ruleName"
             label="名称"

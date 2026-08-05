@@ -1,5 +1,6 @@
 import { ExperimentOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
+import styles from './index.less';
 import type { WorkbenchHeaderProps } from './types';
 
 export type { WorkbenchHeaderProps } from './types';
@@ -15,50 +16,15 @@ function WorkbenchHeader({
   onOpenAnalysis,
 }: WorkbenchHeaderProps) {
   return (
-    <header
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 16,
-        padding: '12px 16px',
-        borderBottom: '1px solid var(--border)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 16,
-          minWidth: 0,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-          }}
-        >
+    <header className={styles.header}>
+      <div className={styles.brandRow}>
+        <div className={styles.brand}>
           <img
+            className={styles.logo}
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
-            style={{
-              display: 'block',
-              height: 28,
-              width: 'auto',
-              flexShrink: 0,
-            }}
           />
-          <Typography.Title
-            level={4}
-            style={{
-              margin: 0,
-              lineHeight: '28px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <Typography.Title level={4} className={styles.title}>
             知识织物工作台
           </Typography.Title>
         </div>

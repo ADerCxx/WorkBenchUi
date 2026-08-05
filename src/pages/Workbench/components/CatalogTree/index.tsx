@@ -1,4 +1,5 @@
 import { Empty, Spin, Tree } from 'antd';
+import styles from './index.less';
 import type { CatalogTreeProps } from './types';
 
 export type { CatalogTreeProps } from './types';
@@ -16,7 +17,7 @@ function CatalogTree({
 }: CatalogTreeProps) {
   if (loading) {
     return (
-      <div style={{ padding: 24, textAlign: 'center' }}>
+      <div className={styles.loading}>
         <Spin />
       </div>
     );
@@ -25,9 +26,9 @@ function CatalogTree({
   if (!hasPicked) {
     return (
       <Empty
+        className={styles.empty}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="请先选择项目根目录"
-        style={{ marginTop: 48 }}
       />
     );
   }
@@ -35,9 +36,9 @@ function CatalogTree({
   if (treeData.length === 0) {
     return (
       <Empty
+        className={styles.empty}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description={emptyDescription}
-        style={{ marginTop: 48 }}
       />
     );
   }
@@ -46,6 +47,7 @@ function CatalogTree({
 
   return (
     <Tree
+      className={styles.tree}
       key={treeData.map((n) => n.key).join('|')}
       treeData={treeData}
       selectedKeys={selectedPath ? [selectedPath] : []}
@@ -55,7 +57,6 @@ function CatalogTree({
         const key = String(keys[0] ?? '');
         if (key) onSelectFile(key);
       }}
-      style={{ padding: 8 }}
     />
   );
 }

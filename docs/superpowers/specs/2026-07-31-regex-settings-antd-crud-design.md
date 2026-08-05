@@ -118,3 +118,4 @@ src/apis/regex/
 - 2026-07-31：改用 `useAntdTable`；分页约定外置到 `workbench-api-request`；本规格仅覆盖正则设置页
 - 2026-07-31：代码落地完成；路由设计文档已同步（`2026-07-30-routing-scaffold-design.md`）
 - 2026-08-04：真实后端联调见 `2026-08-04-regex-settings-api-integration-design.md`；API 目录改为 `src/apis/regexRules/**`，mock `src/apis/regex/**` 已移除
+- 2026-08-05：页面静态样式改为同级 `index.less` + CSS Module（见 css-module-less）

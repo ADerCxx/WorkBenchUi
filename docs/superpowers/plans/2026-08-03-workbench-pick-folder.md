@@ -28,9 +28,9 @@
 | `src/pages/Workbench/scan/pickProjectRoot.ts` | `showDirectoryPicker` 封装 |
 | `src/pages/Workbench/scan/scanHardcodedRoots.ts` | 项目根 walk + 读文件 |
 | `src/pages/Workbench/scan/file-system-access.d.ts` | `Window.showDirectoryPicker` 类型补充 |
-| `src/pages/Workbench/components/WorkbenchHeader.tsx` | 顶栏 |
-| `src/pages/Workbench/components/CatalogTree.tsx` | 左侧树/空态 |
-| `src/pages/Workbench/components/RawPreview.tsx` | 右侧原文 |
+| `src/pages/Workbench/components/WorkbenchHeader/` | 顶栏（`index.tsx` + `index.less` + `types.ts`） |
+| `src/pages/Workbench/components/CatalogTree/` | 左侧树/空态（含 `index.less`） |
+| `src/pages/Workbench/components/RawPreview/` | 右侧原文（含 `index.less`） |
 | `src/pages/Workbench/index.tsx` | 状态编排 |
 | `src/pages/Workbench/index.less` | 三栏布局 |
 | `src/router/index.tsx` | `/workbench` → `BlankLayout` |
@@ -596,19 +596,23 @@ git commit -m "feat: mount workbench under BlankLayout"
 ### Task 6: UI 子组件 + 页面编排
 
 **Files:**
-- Create: `src/pages/Workbench/components/WorkbenchHeader.tsx`
-- Create: `src/pages/Workbench/components/CatalogTree.tsx`
-- Create: `src/pages/Workbench/components/RawPreview.tsx`
+- Create: `src/pages/Workbench/components/WorkbenchHeader/index.tsx`
+- Create: `src/pages/Workbench/components/WorkbenchHeader/index.less`
+- Create: `src/pages/Workbench/components/CatalogTree/index.tsx`
+- Create: `src/pages/Workbench/components/CatalogTree/index.less`
+- Create: `src/pages/Workbench/components/RawPreview/index.tsx`
+- Create: `src/pages/Workbench/components/RawPreview/index.less`
 - Create: `src/pages/Workbench/index.less`
 - Modify: `src/pages/Workbench/index.tsx`
 
 - [x] **Step 1: WorkbenchHeader**
 
-创建 `src/pages/Workbench/components/WorkbenchHeader.tsx`：
+创建 `index.tsx` + `index.less`（静态布局进 less，禁止大块 `style={{}}`）：
 
 ```tsx
 import { FolderOpenOutlined } from '@ant-design/icons';
-import { Button, Space, Typography } from 'antd';
+import { Button, Typography } from 'antd';
+import styles from './index.less';
 
 type Props = {
   rootName: string | null;
@@ -621,31 +625,22 @@ type Props = {
  */
 function WorkbenchHeader({ rootName, loading, onPickFolder }: Props) {
   return (
-    <header
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 16,
-        padding: '12px 16px',
-        borderBottom: '1px solid var(--border)',
-      }}
-    >
-      <Space size="middle" align="center">
-        <Space size={8} align="center">
+    <header className={styles.header}>
+      <div className={styles.brandRow}>
+        <div className={styles.brand}>
           <img
+            className={styles.logo}
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
-            style={{ display: 'block', height: 28, width: 'auto' }}
           />
-          <Typography.Title level={4} style={{ margin: 0 }}>
+          <Typography.Title level={4} className={styles.title}>
             知识织物工作台
           </Typography.Title>
-        </Space>
+        </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}
-      </Space>
+      </div>
       <Button
         type="primary"
         icon={<FolderOpenOutlined />}
@@ -661,12 +656,51 @@ function WorkbenchHeader({ rootName, loading, onPickFolder }: Props) {
 export default WorkbenchHeader;
 ```
 
+```less
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  display: block;
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+}
+```
+
 - [x] **Step 2: CatalogTree**
 
-创建 `src/pages/Workbench/components/CatalogTree.tsx`：
+创建 `CatalogTree/index.tsx` + `index.less`：
 
 ```tsx
 import { Empty, Spin, Tree } from 'antd';
+import styles from './index.less';
 import type { WorkbenchTreeNode } from '../scan/types';
 
 type Props = {
@@ -689,7 +723,7 @@ function CatalogTree({
 }: Props) {
   if (loading) {
     return (
-      <div style={{ padding: 24, textAlign: 'center' }}>
+      <div className={styles.loading}>
         <Spin />
       </div>
     );
@@ -698,9 +732,9 @@ function CatalogTree({
   if (!hasPicked) {
     return (
       <Empty
+        className={styles.empty}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="请先选择项目根目录"
-        style={{ marginTop: 48 }}
       />
     );
   }
@@ -708,9 +742,9 @@ function CatalogTree({
   if (treeData.length === 0) {
     return (
       <Empty
+        className={styles.empty}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="未扫描到 .md / .mdc"
-        style={{ marginTop: 48 }}
       />
     );
   }
@@ -719,6 +753,7 @@ function CatalogTree({
 
   return (
     <Tree
+      className={styles.tree}
       key={treeData.map((n) => n.key).join('|')}
       treeData={treeData}
       selectedKeys={selectedPath ? [selectedPath] : []}
@@ -728,7 +763,6 @@ function CatalogTree({
         const key = String(keys[0] ?? '');
         if (key) onSelectFile(key);
       }}
-      style={{ padding: 8 }}
     />
   );
 }
@@ -736,12 +770,28 @@ function CatalogTree({
 export default CatalogTree;
 ```
 
+```less
+.loading {
+  padding: 24px;
+  text-align: center;
+}
+
+.empty {
+  margin-top: 48px;
+}
+
+.tree {
+  padding: 8px;
+}
+```
+
 - [x] **Step 3: RawPreview**
 
-创建 `src/pages/Workbench/components/RawPreview.tsx`：
+创建 `RawPreview/index.tsx` + `index.less`：
 
 ```tsx
 import { Empty, Typography } from 'antd';
+import styles from './index.less';
 
 type Props = {
   path: string | null;
@@ -755,46 +805,56 @@ function RawPreview({ path, content }: Props) {
   if (!path || content === null) {
     return (
       <Empty
+        className={styles.empty}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="从左侧选择文件"
-        style={{ marginTop: 80 }}
       />
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
-      <Typography.Text
-        code
-        style={{
-          display: 'block',
-          padding: '8px 12px',
-          borderBottom: '1px solid var(--border)',
-          wordBreak: 'break-all',
-        }}
-      >
+    <div className={styles.root}>
+      <Typography.Text code className={styles.path}>
         {path}
       </Typography.Text>
-      <pre
-        style={{
-          margin: 0,
-          padding: 12,
-          flex: 1,
-          overflow: 'auto',
-          fontFamily: 'var(--mono)',
-          fontSize: 13,
-          lineHeight: 1.5,
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        {content}
-      </pre>
+      <pre className={styles.content}>{content}</pre>
     </div>
   );
 }
 
 export default RawPreview;
+```
+
+```less
+.empty {
+  margin-top: 80px;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.path {
+  display: block;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  word-break: break-all;
+}
+
+.content {
+  margin: 0;
+  padding: 12px;
+  flex: 1;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 ```
 
 - [x] **Step 4: 页面样式**
@@ -1011,3 +1071,4 @@ git commit -m "docs: mark workbench pick-folder design as implemented"
 | 2026-08-03 | 全部 Task 1–7 已实现；新增 file-system-access.d.ts；BlankLayout less 未改（全局高度链已够）；Commit 步骤按约定跳过。 |
 | 2026-08-03 | 修复文档 UTF-8 乱码（PowerShell Set-Content 编码损坏）。 |
 | 2026-08-05 | 顶栏标题改为图标 +「知识织物工作台」（与 MainLayout `fabricIcon.png` 一致） |
+| 2026-08-05 | Task 6 子组件静态样式迁入同级 `index.less`（CSS Module） |

@@ -89,6 +89,7 @@ export default Home;
 **Files:**
 - Create: `src/pages/Demo/index.tsx`
 - Create: `src/pages/NotFound/index.tsx`
+- Create: `src/pages/NotFound/index.less`
 
 - [ ] **Step 1: Demo 页**
 
@@ -115,13 +116,14 @@ export default Demo;
 
 ```tsx
 import { Link } from 'react-router-dom';
+import styles from './index.less';
 
 /**
  * 404 页面
  */
 function NotFound() {
   return (
-    <section style={{ padding: 24 }}>
+    <section className={styles.page}>
       <h1>404</h1>
       <p>页面不存在</p>
       <Link to="/">返回首页</Link>
@@ -130,6 +132,12 @@ function NotFound() {
 }
 
 export default NotFound;
+```
+
+```less
+.page {
+  padding: 24px;
+}
 ```
 
 ---
@@ -296,3 +304,4 @@ Expected: `tsc -b` 与 `vite build` 成功。
 
 - 已删除 `src/pages/Demo`；勿再引用 `/demo`
 - 正则设置页无 antd，使用原生 `<table>` + 页面内常量模拟数据
+- 2026-08-05：NotFound 使用 CSS Module（`index.less`），勿再写 `style={{ padding: 24 }}`

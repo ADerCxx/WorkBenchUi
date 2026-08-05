@@ -73,12 +73,15 @@ src/pages/Workbench/
   components/
     WorkbenchHeader/
       index.tsx
+      index.less            # CSS Module（静态布局/视觉）
       types.ts              # WorkbenchHeaderProps
     CatalogTree/
       index.tsx
+      index.less
       types.ts              # CatalogTreeProps
     RawPreview/
       index.tsx
+      index.less
       types.ts              # RawPreviewProps
 ```
 
@@ -174,3 +177,4 @@ type WorkbenchTreeNode = {
 | 2026-08-04 | 移除 `whitelistMatch.test.ts`，与「不保留 scan 业务单测」一致 |
 | 2026-08-04 | 目录字段改为 `folderName` 字面量（仅根下第一层）；文件正则只匹配文件名 |
 | 2026-08-05 | 顶栏标题改为「知识织物工作台」，前置 `fabricIcon.png` |
+| 2026-08-05 | Header / CatalogTree / RawPreview 静态样式迁入同级 `index.less`（CSS Module） |

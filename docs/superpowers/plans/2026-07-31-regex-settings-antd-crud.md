@@ -28,6 +28,7 @@
 | `src/apis/regex/delete/index.ts` | `RegexDeleteApi` |
 | `src/apis/regex/toggle/index.ts` | `RegexToggleApi` |
 | `src/pages/RegexSettings/index.tsx` | 管理页 UI |
+| `src/pages/RegexSettings/index.less` | CSS Module 样式 |
 | `docs/superpowers/specs/2026-07-30-routing-scaffold-design.md` | 去掉「仅模拟表格」表述 |
 
 ---
@@ -394,6 +395,7 @@ git commit -m "feat(regex): add mock list and CRUD APIs"
 
 **Files:**
 - Modify: `src/pages/RegexSettings/index.tsx`
+- Create: `src/pages/RegexSettings/index.less`
 
 - [ ] **Step 1: 用 Antd + useAntdTable 重写页面**
 
@@ -422,6 +424,7 @@ import {
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useState } from 'react'
+import styles from './index.less'
 
 /**
  * 校验正则字面量是否可编译
@@ -554,13 +557,13 @@ function RegexSettings() {
   ]
 
   return (
-    <section style={{ padding: 24 }}>
-      <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
+    <section className={styles.page}>
+      <Space className={styles.toolbar}>
         <div>
-          <Typography.Title level={3} style={{ margin: 0 }}>
+          <Typography.Title level={3} className={styles.heading}>
             正则表达式设置
           </Typography.Title>
-          <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+          <Typography.Paragraph type="secondary" className={styles.desc}>
             用于扫描文件夹的白名单规则（Demo，数据为内存 mock）。
           </Typography.Paragraph>
         </div>
@@ -569,15 +572,15 @@ function RegexSettings() {
         </Button>
       </Space>
 
-      <Form form={filterForm} layout="inline" style={{ marginBottom: 16 }}>
+      <Form form={filterForm} layout="inline" className={styles.filterForm}>
         <Form.Item name="name" label="名称">
-          <Input allowClear placeholder="关键字" style={{ width: 180 }} />
+          <Input allowClear placeholder="关键字" className={styles.keywordInput} />
         </Form.Item>
         <Form.Item name="enabled" label="启用">
           <Select
             allowClear
             placeholder="全部"
-            style={{ width: 120 }}
+            className={styles.enableSelect}
             options={[
               { label: '启用', value: true },
               { label: '停用', value: false },
@@ -604,7 +607,7 @@ function RegexSettings() {
         confirmLoading={creating || updating}
         destroyOnHidden
       >
-        <Form form={editForm} layout="vertical" style={{ marginTop: 8 }}>
+        <Form form={editForm} layout="vertical" className={styles.editForm}>
           <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
             <Input />
           </Form.Item>
@@ -699,3 +702,4 @@ git commit -m "docs: update routing spec for regex settings CRUD"
 ## 修订记录
 
 - 2026-08-04：真实后端联调已另开 `2026-08-04-regex-settings-api-integration`；本 plan 的 `src/apis/regex/**` mock 路径已废弃
+- 2026-08-05：页面静态样式迁入同级 `index.less`（CSS Module），去掉 `style={{}}`

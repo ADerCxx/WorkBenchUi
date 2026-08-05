@@ -43,6 +43,8 @@ src/
     Workbench/
     RegexSettings/
     NotFound/
+      index.tsx
+      index.less
     BlankPlaceholder/      # /blank 挂点占位
 ```
 
@@ -85,3 +87,4 @@ src/
 - 2026-07-31：移除 Demo；新增 `/workbench`、`/regex-settings`；顶栏导航同步更新。
 - 2026-07-31：正则页升级为 Antd CRUD Demo（见 `2026-07-31-regex-settings-antd-crud-design.md`）。
 - 2026-08-03：根 Layout 拆为 MainLayout / WorkbenchLayout / BlankLayout 兄弟分支；详见 `2026-08-03-multi-layout-design.md`。`App.tsx` 已删除。
+- 2026-08-05：NotFound 静态样式迁入同级 `index.less`（CSS Module）
