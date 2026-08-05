@@ -53,7 +53,7 @@
 
 ```
 pages/Workbench
-├─ 顶栏：标题「Skill / Rule 工作台」+「选择文件夹」
+├─ 顶栏：fabric 图标 + 标题「知识织物工作台」+「选择文件夹」
 ├─ 左栏：目录树 / Empty / Spin
 └─ 右栏：Empty 或 路径 + 原文
 ```
@@ -173,3 +173,4 @@ type WorkbenchTreeNode = {
 | 2026-08-04 | 扫描改为白名单驱动（见 whitelist-scan design）            |
 | 2026-08-04 | 移除 `whitelistMatch.test.ts`，与「不保留 scan 业务单测」一致 |
 | 2026-08-04 | 目录字段改为 `folderName` 字面量（仅根下第一层）；文件正则只匹配文件名 |
+| 2026-08-05 | 顶栏标题改为「知识织物工作台」，前置 `fabricIcon.png` |

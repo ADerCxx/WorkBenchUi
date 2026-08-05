@@ -25,14 +25,47 @@ function WorkbenchHeader({
         borderBottom: '1px solid var(--border)',
       }}
     >
-      <Space size="middle">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          Skill / Rule 工作台
-        </Typography.Title>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          minWidth: 0,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}fabricIcon.png`}
+            alt=""
+            style={{
+              display: 'block',
+              height: 28,
+              width: 'auto',
+              flexShrink: 0,
+            }}
+          />
+          <Typography.Title
+            level={4}
+            style={{
+              margin: 0,
+              lineHeight: '28px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            知识织物工作台
+          </Typography.Title>
+        </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}
-      </Space>
+      </div>
       <Space>
         <Button
           type="primary"

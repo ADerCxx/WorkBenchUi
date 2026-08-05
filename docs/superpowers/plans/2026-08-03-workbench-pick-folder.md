@@ -631,10 +631,17 @@ function WorkbenchHeader({ rootName, loading, onPickFolder }: Props) {
         borderBottom: '1px solid var(--border)',
       }}
     >
-      <Space size="middle">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          Skill / Rule 工作台
-        </Typography.Title>
+      <Space size="middle" align="center">
+        <Space size={8} align="center">
+          <img
+            src={`${import.meta.env.BASE_URL}fabricIcon.png`}
+            alt=""
+            style={{ display: 'block', height: 28, width: 'auto' }}
+          />
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            知识织物工作台
+          </Typography.Title>
+        </Space>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}
@@ -1003,3 +1010,4 @@ git commit -m "docs: mark workbench pick-folder design as implemented"
 |------|------|
 | 2026-08-03 | 全部 Task 1–7 已实现；新增 file-system-access.d.ts；BlankLayout less 未改（全局高度链已够）；Commit 步骤按约定跳过。 |
 | 2026-08-03 | 修复文档 UTF-8 乱码（PowerShell Set-Content 编码损坏）。 |
+| 2026-08-05 | 顶栏标题改为图标 +「知识织物工作台」（与 MainLayout `fabricIcon.png` 一致） |

@@ -222,10 +222,17 @@ function WorkbenchHeader({
         borderBottom: '1px solid var(--border)',
       }}
     >
-      <Space size="middle">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          Skill / Rule 工作台
-        </Typography.Title>
+      <Space size="middle" align="center">
+        <Space size={8} align="center">
+          <img
+            src={`${import.meta.env.BASE_URL}fabricIcon.png`}
+            alt=""
+            style={{ display: 'block', height: 28, width: 'auto' }}
+          />
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            知识织物工作台
+          </Typography.Title>
+        </Space>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}
@@ -732,3 +739,9 @@ Expected: 测试通过；`tsc -b && vite build` 成功。
 - 无 TBD；模式字面量统一为 `AnalysisPanelMode`
 - 几何常量与阈值与 spec（480×320、默认约 720×480）一致
 - 关闭文案与一键分析文案与 spec 一致
+
+## 修订记录
+
+| 日期 | 摘要 |
+|------|------|
+| 2026-08-05 | Task 3 Header 示例与实现对齐：顶栏 `fabricIcon` +「知识织物工作台」 |
