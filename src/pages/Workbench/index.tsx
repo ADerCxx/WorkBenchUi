@@ -1,6 +1,8 @@
 import { RegexRulesQueryEnabledApi } from '@/apis/regexRules/queryEnabled';
 import { message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
+import AnalysisPanel from './components/AnalysisPanel';
+import type { AnalysisPanelMode } from './components/AnalysisPanel/types';
 import CatalogTree from './components/CatalogTree';
 import RawPreview from './components/RawPreview';
 import WorkbenchHeader from './components/WorkbenchHeader';
@@ -26,6 +28,9 @@ function Workbench() {
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
   const [emptyDescription, setEmptyDescription] =
     useState('未扫描到匹配的白名单文件');
+  const [analysisMode, setAnalysisMode] = useState<AnalysisPanelMode | null>(
+    null,
+  );
 
   const { treeData, contentByPath } = useMemo(() => buildTree(files), [files]);
 
@@ -69,12 +74,22 @@ function Workbench() {
     setSelectedPath(path);
   }, []);
 
+  const handleOpenAnalysis = useCallback(() => {
+    setAnalysisMode('normal');
+  }, []);
+
+  const handleCloseAnalysis = useCallback(() => {
+    setAnalysisMode(null);
+  }, []);
+
   return (
     <div className={styles.page}>
       <WorkbenchHeader
         rootName={rootName}
         loading={loading}
         onPickFolder={handlePickFolder}
+        analysisDisabled={selectedPath === null}
+        onOpenAnalysis={handleOpenAnalysis}
       />
       <div className={styles.body}>
         <aside className={styles.catalog}>
@@ -91,6 +106,13 @@ function Workbench() {
           <RawPreview path={selectedPath} content={selectedContent} />
         </main>
       </div>
+      {analysisMode !== null ? (
+        <AnalysisPanel
+          mode={analysisMode}
+          onModeChange={setAnalysisMode}
+          onClose={handleCloseAnalysis}
+        />
+      ) : null}
     </div>
   );
 }
