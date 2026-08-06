@@ -127,8 +127,8 @@ Expected: FAIL（模块不存在或导出缺失）。
 创建 `panelGeometry.ts`：
 
 ```ts
-export const DEFAULT_PANEL_WIDTH = 720;
-export const DEFAULT_PANEL_HEIGHT = 480;
+export const DEFAULT_PANEL_WIDTH = 960;
+export const DEFAULT_PANEL_HEIGHT = 640;
 export const MIN_COMFORT_WIDTH = 480;
 export const MIN_COMFORT_HEIGHT = 320;
 
@@ -730,12 +730,13 @@ Expected: 测试通过；`tsc -b && vite build` 成功。
 ## Placeholder / 类型一致性自检
 
 - 无 TBD；模式字面量统一为 `AnalysisPanelMode`
-- 几何常量与阈值与 spec（480×320、默认约 720×480）一致
+- 几何常量与阈值与 spec（480×320、默认 **960×640**）一致
 - 关闭文案与一键分析文案与 spec 一致
 
 ## 修订记录
 
 | 日期 | 摘要 |
 |------|------|
+| 2026-08-06 | 默认打开尺寸由 720×480 调整为 **960×640**（`panelGeometry.ts` 常量）；过小阈值不变 |
 | 2026-08-05 | Task 3 Header 示例与实现对齐：顶栏 `fabricIcon` +「知识织物工作台」 |
 | 2026-08-05 | WorkbenchHeader 静态样式改为 CSS Module（`index.less`），去掉 `style={{}}` |
