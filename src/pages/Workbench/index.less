@@ -15,10 +15,10 @@
 }
 
 .catalog {
-  width: 300px;
+  display: flex;
   flex-shrink: 0;
-  border-right: 1px solid var(--border);
-  overflow: auto;
+  min-height: 0;
+  /* 宽度由 CatalogSidebar 承担；勿再写 300px / border */
 }
 
 .preview {

@@ -8,5 +8,65 @@
 }
 
 .tree {
-  padding: 8px;
+  width: 100%;
+  overflow: hidden;
+
+  :global {
+    .ant-tree {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .ant-tree-treenode {
+      display: flex !important;
+      width: 100%;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* 展开箭头与内容区间距收紧 */
+    .ant-tree-switcher {
+      margin-inline-end: 0 !important;
+    }
+
+    .ant-tree-node-content-wrapper {
+      flex: 1 1 0;
+      min-width: 0 !important;
+      overflow: hidden;
+      display: inline-flex !important;
+      align-items: center;
+      gap: 4px;
+      padding-inline: 2px 4px !important;
+    }
+
+    .ant-tree-title {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    /* 类型图标占位缩小，避免与标题拉开过大空白 */
+    .ant-tree-iconEle {
+      flex-shrink: 0;
+      width: 16px !important;
+      margin: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      font-size: 14px;
+    }
+  }
+}
+
+.nodeTitle {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: inherit;
+  font-family: var(--sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

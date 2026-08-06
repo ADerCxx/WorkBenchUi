@@ -3,7 +3,7 @@ import { message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import AnalysisPanel from './components/AnalysisPanel';
 import type { AnalysisPanelMode } from './components/AnalysisPanel/types';
-import CatalogTree from './components/CatalogTree';
+import CatalogSidebar from './components/CatalogSidebar';
 import PreviewPane from './components/PreviewPane';
 import WorkbenchHeader from './components/WorkbenchHeader';
 import styles from './index.less';
@@ -93,7 +93,7 @@ function Workbench() {
       />
       <div className={styles.body}>
         <aside className={styles.catalog}>
-          <CatalogTree
+          <CatalogSidebar
             hasPicked={hasPicked}
             loading={loading}
             treeData={treeData}

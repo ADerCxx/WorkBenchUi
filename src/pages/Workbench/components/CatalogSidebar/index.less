@@ -1,0 +1,58 @@
+.root {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 300px;
+  min-height: 0;
+  height: 100%;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  transition: width 0.2s ease;
+}
+
+.rootCollapsed {
+  width: 48px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.bodyHidden {
+  display: none;
+}
+
+.toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  transform: translate(50%, -50%);
+}
+
+.toggle:hover {
+  color: var(--text-h);
+  border-color: var(--text);
+  background: var(--bg);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
