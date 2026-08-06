@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import AnalysisPanel from './components/AnalysisPanel';
 import type { AnalysisPanelMode } from './components/AnalysisPanel/types';
 import CatalogTree from './components/CatalogTree';
-import RawPreview from './components/RawPreview';
+import PreviewPane from './components/PreviewPane';
 import WorkbenchHeader from './components/WorkbenchHeader';
 import styles from './index.less';
 import { buildTree } from './scan/buildTree';
@@ -18,7 +18,7 @@ function isAbortError(err: unknown): boolean {
 }
 
 /**
- * 工作台：选择项目根，按启用白名单规则扫描并展示树与原文
+ * 工作台：选择项目根，按启用白名单规则扫描并展示树与预览
  */
 function Workbench() {
   const [loading, setLoading] = useState(false);
@@ -103,7 +103,7 @@ function Workbench() {
           />
         </aside>
         <main className={styles.preview}>
-          <RawPreview path={selectedPath} content={selectedContent} />
+          <PreviewPane path={selectedPath} content={selectedContent} />
         </main>
       </div>
       {analysisMode !== null ? (
