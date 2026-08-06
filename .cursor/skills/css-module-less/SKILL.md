@@ -98,7 +98,7 @@ function WorkbenchHeader() {
     <header className={styles.header}>
       <div className={styles.brand}>
         <img className={styles.logo} src={...} alt="" />
-        <span className={styles.title}>知识织物工作台</span>
+        <img className={styles.title} src={...} alt="知识织物工作台" />
       </div>
     </header>
   );
@@ -115,7 +115,8 @@ function WorkbenchHeader() {
   border-bottom: 1px solid var(--border);
 }
 
-.logo {
+.logo,
+.title {
   display: block;
   height: 28px;
   width: auto;

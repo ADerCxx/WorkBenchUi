@@ -24,9 +24,11 @@ function WorkbenchHeader({
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
           />
-          <Typography.Title level={4} className={styles.title}>
-            知识织物工作台
-          </Typography.Title>
+          <img
+            className={styles.title}
+            src={`${import.meta.env.BASE_URL}fabricNameIcon.png`}
+            alt="知识织物工作台"
+          />
         </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>

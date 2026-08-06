@@ -75,7 +75,7 @@
 |------|------|
 | `Home` `.title` | `font-family: var(--display)`；`font-weight: 600`（现为 700，按 display 角色改为 600） |
 | `Home` `.subtitle` / `.meta` / `.cta` | 继承 `--sans`；副标题 400；CTA 可用 600 |
-| `WorkbenchHeader` `.title` | `font-family: var(--display)`；`font-weight: 600` |
+| `WorkbenchHeader` `.title` | 品牌标题改为图片 `fabricNameIcon.png`（不再用 display 字样） |
 | `RegexSettings` `.heading` | `font-family: var(--heading)`；`font-weight: 700` |
 | `AnalysisPanel` `.title` | `font-family: var(--heading)`；`font-weight: 700` |
 | `RawPreview` `.content` | 已用 `--mono`，核对即可 |
@@ -101,7 +101,7 @@
 
 - [ ] 冷加载：DevTools Network 可见 fonts.googleapis / gstatic 请求成功；正文为 Inter，中文为 Noto Sans SC
 - [ ] Home 主标题为 Space Grotesk；副标题为 Inter
-- [ ] 工作台顶栏「知识织物工作台」为 Space Grotesk
+- [ ] 工作台顶栏品牌为图标 + 标题图 `fabricNameIcon.png`（非文字字样）
 - [ ] 正则设置页标题、分析面板标题为 Inter 700
 - [ ] RawPreview 路径与正文为 IBM Plex Mono
 - [ ] Antd Button / Table 等继承 Inter 栈
@@ -112,3 +112,9 @@
 - 将 CDN 换为 `@fontsource/*` 或 `public/fonts` + `@font-face`
 - 按观感微调 Noto Sans SC 字重或是否保留
 - 若需，为 Antd `Typography` 统一 code 样式做更细 token
+
+## 修订记录
+
+| 日期 | 摘要 |
+|------|------|
+| 2026-08-06 | 工作台顶栏品牌标题改为图片 `fabricNameIcon.png`，不再使用 Space Grotesk 文字 |

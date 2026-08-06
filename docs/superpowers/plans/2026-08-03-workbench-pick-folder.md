@@ -633,9 +633,11 @@ function WorkbenchHeader({ rootName, loading, onPickFolder }: Props) {
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
           />
-          <Typography.Title level={4} className={styles.title}>
-            知识织物工作台
-          </Typography.Title>
+          <img
+            className={styles.title}
+            src={`${import.meta.env.BASE_URL}fabricNameIcon.png`}
+            alt="知识织物工作台"
+          />
         </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
@@ -687,10 +689,10 @@ export default WorkbenchHeader;
 }
 
 .title {
-  margin: 0;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
+  display: block;
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
 }
 ```
 
@@ -1072,3 +1074,4 @@ git commit -m "docs: mark workbench pick-folder design as implemented"
 | 2026-08-03 | 修复文档 UTF-8 乱码（PowerShell Set-Content 编码损坏）。 |
 | 2026-08-05 | 顶栏标题改为图标 +「知识织物工作台」（与 MainLayout `fabricIcon.png` 一致） |
 | 2026-08-05 | Task 6 子组件静态样式迁入同级 `index.less`（CSS Module） |
+| 2026-08-06 | 顶栏文字标题改为图片 `fabricNameIcon.png`（保留前置 `fabricIcon.png`） |

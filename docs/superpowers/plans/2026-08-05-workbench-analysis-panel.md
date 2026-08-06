@@ -222,9 +222,11 @@ function WorkbenchHeader({
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
             alt=""
           />
-          <Typography.Title level={4} className={styles.title}>
-            知识织物工作台
-          </Typography.Title>
+          <img
+            className={styles.title}
+            src={`${import.meta.env.BASE_URL}fabricNameIcon.png`}
+            alt="知识织物工作台"
+          />
         </div>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
@@ -740,3 +742,4 @@ Expected: 测试通过；`tsc -b && vite build` 成功。
 | 2026-08-06 | 默认打开尺寸由 720×480 调整为 **960×640**（`panelGeometry.ts` 常量）；过小阈值不变 |
 | 2026-08-05 | Task 3 Header 示例与实现对齐：顶栏 `fabricIcon` +「知识织物工作台」 |
 | 2026-08-05 | WorkbenchHeader 静态样式改为 CSS Module（`index.less`），去掉 `style={{}}` |
+| 2026-08-06 | Header 示例与实现对齐：顶栏 `fabricIcon` + 标题图 `fabricNameIcon.png` |

@@ -195,16 +195,14 @@ Expected: 四条变量命中；`h1,h2` 为 `font-weight: 700`；无残留 `syste
 
 - [ ] **Step 2: WorkbenchHeader 品牌标题**
 
-将 `.title` 改为：
+品牌标题改为图片（非 display 字样）：`fabricNameIcon.png`，`.title` 为图片尺寸样式：
 
 ```less
 .title {
-  margin: 0;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  font-family: var(--display);
-  font-weight: 600;
+  display: block;
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
 }
 ```
 
@@ -383,7 +381,7 @@ yarn dev
 
 - [ ] Network：fonts.googleapis / gstatic 成功；正文 Inter，中文 Noto Sans SC
 - [ ] `/`：主标题 Space Grotesk；副标题 Inter
-- [ ] `/workbench`：顶栏「知识织物工作台」Space Grotesk；选文件后 RawPreview 路径与正文 IBM Plex Mono
+- [ ] `/workbench`：顶栏图标 + 标题图 `fabricNameIcon.png`；选文件后 RawPreview 路径与正文 IBM Plex Mono
 - [ ] `/regex-settings`：页标题 Inter 700
 - [ ] 工作台打开分析工具：面板标题 Inter 700
 - [ ] Antd 按钮等为 Inter 栈
@@ -420,3 +418,9 @@ yarn dev
 | typography skill + rule；css-module-less 引用 | Task 5 |
 | 测试计划 + spec 状态 | Task 6 |
 | 非目标（不换本地字体、无工具类等） | 全计划未引入 |
+
+## 修订记录
+
+| 日期 | 摘要 |
+|------|------|
+| 2026-08-06 | 工作台顶栏品牌标题改为图片 `fabricNameIcon.png`，不再要求 Space Grotesk 文字 |

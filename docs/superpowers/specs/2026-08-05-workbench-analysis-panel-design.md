@@ -123,3 +123,4 @@ pages/Workbench/
 | 2026-08-05 | Task 6 代码级验收通过；状态改为「已实现」。拖拽/缩放/胶囊等交互需浏览器冒烟确认。 |
 | 2026-08-05 | 顶栏品牌文案与 pick-folder 对齐：图标 +「知识织物工作台」（见 pick-folder design） |
 | 2026-08-05 | WorkbenchHeader 静态样式迁入同级 `index.less`（与 css-module-less 对齐） |
+| 2026-08-06 | 顶栏品牌与 pick-folder 对齐：图标 + 标题图 `fabricNameIcon.png` |
