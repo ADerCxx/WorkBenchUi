@@ -20,8 +20,14 @@ function FabricLoading({ size = 'md', className }: FabricLoadingProps) {
     .join(' ');
 
   return (
-    <span className={rootClassName} role="status" aria-label="加载中">
+    <span
+      className={rootClassName}
+      role="status"
+      aria-label="加载中"
+      style={{ ['--fabric-mask' as string]: `url("${ICON_SRC}")` }}
+    >
       <img className={styles.img} src={ICON_SRC} alt="" />
+      <span className={styles.shimmer} aria-hidden />
     </span>
   );
 }

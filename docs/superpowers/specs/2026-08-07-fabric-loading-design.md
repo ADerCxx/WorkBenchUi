@@ -30,17 +30,18 @@
 
 ## 决策
 
-采用 **方案 1：`<img>` + CSS `mask` 扫光**。
+采用 **方案 1：底图常显 + 伪元素高光扫过**（不再用 `mask` 控制整图可见性）。
 
 | 决策点 | 选择 | 说明 |
 |--------|------|------|
 | 落盘 | `src/components/FabricLoading/` | 与 `MarkdownPreview` 同级，全局复用 |
-| 视觉 | 渐变扫光（预览 B） | 非 mask 灌满 / 呼吸 / clip 揭开 |
+| 视觉 | 渐变扫光（预览 B） | 底图常驻；非 mask 灌满 / 呼吸 / clip 揭开 |
+| 实现 | `<img>` + `.shimmer` 层 | 窄竖状光柱 + 字标 `luminance` mask：光柱只在字形内扫过 |
 | 文案 | 无 | 纯视觉 |
 | 尺寸 | `sm` \| `md` \| `lg` | 默认 `md`；控 width，高自适应 |
 | 资源 | `public/fabricIcon.png` | `${import.meta.env.BASE_URL}fabricIcon.png` |
 | 完成态 | 无 | 调用方卸载组件即结束 |
-| 动效偏好 | 尊重系统设置 | reduced-motion 时停动画 |
+| 动效偏好 | 尊重系统设置 | reduced-motion 时停动画、隐藏高光层 |
 | 业务接入 | 本轮不做 | YAGNI |
 
 ## 技术方案
@@ -74,7 +75,8 @@ type FabricLoadingProps = {
 ```
 
 行为要点：
-- 渲染扫光中的 `fabricIcon.png`
+- 渲染常驻的 `fabricIcon.png`；`.shimmer` 为窄竖状光柱，经字标 mask 后仅在字形内可见（外部黑底无光柱）
+- 根节点注入 `--fabric-mask: url(...)`（对齐 `BASE_URL`）
 - `role="status"` + `aria-label="加载中"`
 - 不自带全屏遮罩；黑底来自 PNG
 
@@ -88,9 +90,9 @@ type FabricLoadingProps = {
 
 ### 样式
 
-- 根：`inline-flex`；图片 `display:block; width:100%; height:auto`
-- 扫光：`mask-image: linear-gradient(...)` 横向位移，约 1.6s `linear` infinite（对齐 brainstorm 预览 B）
-- `@media (prefers-reduced-motion: reduce)`：`animation: none`，移除 mask，图标静态全可见
+- 根：`position:relative; inline-flex; overflow:hidden`；图片 `display:block; width:100%; height:auto`（始终全可见）
+- 扫光：绝对定位 `.shimmer` 窄竖状高光带（约 100deg、带宽约 8%），`translateX(-120% → 120%)`，约 2.4s `linear` infinite；`mask-mode: luminance` 裁到字形内
+- `@media (prefers-reduced-motion: reduce)`：停动画并隐藏 `.shimmer`，底图静态全可见
 
 ### 用法
 
@@ -104,7 +106,7 @@ import FabricLoading from '@/components/FabricLoading';
 
 - [x] 组件可从 `@/components/FabricLoading` 导入并渲染
 - [x] 三档尺寸宽度符合上表
-- [x] 扫光动画连续、原图颜色保留
+- [x] 底图常驻、扫光连续，循环中无明显整图消失
 - [x] 无文案节点
 - [x] reduced-motion 下无扫光
 - [x] 未修改业务侧现有 loading UI
@@ -115,3 +117,9 @@ import FabricLoading from '@/components/FabricLoading';
 |------|------|
 | 2026-08-07 | 实现落地；a11y 采用 role="status"（对齐 plan） |
 | 2026-08-07 | 已接入工作台目录树与分析工具区域 loading（按钮未改） |
+| 2026-08-07 | 修复扫光：弃用 mask 整图显隐；改为底图常显 + 伪元素高光扫过 |
+| 2026-08-07 | 扫光增强：`screen` 混合、加宽高光带、时长 1.6s→2.4s，深色底可见 |
+| 2026-08-07 | 扫光收敛：弃用 screen；字标 luminance mask，避免深色底光柱 |
+| 2026-08-07 | 扫光强度微调：高光峰值/两侧略加强（仍仅字形） |
+| 2026-08-07 | 明确为「竖状光柱在字形内扫过」：窄光柱 + luminance mask |
+| 2026-08-07 | 回退加粗改动，恢复窄光柱字形内扫光版本 |
