@@ -8,4 +8,8 @@ export type AnalysisPanelProps = {
   fileName: string;
   /** 当前选中文件全文；空则不可发起分析 */
   fileContent: string;
+  /** 工作台已扫描文件相对路径（统一 /） */
+  knownPaths: string[];
+  /** 点击图谱节点匹配到路径时选中该文件 */
+  onSelectFile: (path: string) => void;
 };

@@ -1,5 +1,5 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { ApiUrl } from '@/config';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 import { parseSseData } from './parseSseData';
 import type {
@@ -16,7 +16,8 @@ export async function QoderSessionsConversationApi(
   params: QoderSessionsConversationParams,
   handlers: ConversationStreamHandlers = {},
 ): Promise<void> {
-  const { onSession, onDelta, onDone, onError, signal } = handlers;
+  const { onSession, onDelta, onRenderCode, onDone, onError, signal } =
+    handlers;
   const url = `${ApiUrl}/qoderSessions/conversation`;
 
   try {
@@ -44,7 +45,10 @@ export async function QoderSessionsConversationApi(
         }
         const parsed = parseSseData(ev.data);
         if (!parsed) {
-          console.warn('[qoderSessions/conversation] skip bad SSE frame', ev.data);
+          console.warn(
+            '[qoderSessions/conversation] skip bad SSE frame',
+            ev.data,
+          );
           return;
         }
         if (parsed.sessionId) {
@@ -52,6 +56,9 @@ export async function QoderSessionsConversationApi(
         }
         if (parsed.content) {
           onDelta?.(parsed.content);
+        }
+        if (parsed.renderCode) {
+          onRenderCode?.(parsed.renderCode);
         }
         if (parsed.status === 'STOP') {
           onDone?.();
@@ -66,8 +73,7 @@ export async function QoderSessionsConversationApi(
     if (signal?.aborted) {
       return;
     }
-    const error =
-      err instanceof Error ? err : new Error('分析流异常');
+    const error = err instanceof Error ? err : new Error('分析流异常');
     onError?.(error);
     throw error;
   }

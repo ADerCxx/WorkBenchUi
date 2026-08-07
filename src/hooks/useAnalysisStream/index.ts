@@ -1,17 +1,9 @@
 import { QoderSessionsCancelApi } from '@/apis/qoderSessions/cancel';
 import { QoderSessionsConversationApi } from '@/apis/qoderSessions/conversation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { AnalysisStreamStatus, UseAnalysisStreamResult } from './types';
 
-export type AnalysisStreamStatus = 'idle' | 'running' | 'error';
-
-export type UseAnalysisStreamResult = {
-  status: AnalysisStreamStatus;
-  markdown: string;
-  sessionId: string | null;
-  errorMessage: string | null;
-  start: (input: { fileName: string; fileContent: string }) => Promise<void>;
-  abortAndCancel: () => Promise<void>;
-};
+export type { AnalysisStreamStatus, UseAnalysisStreamResult } from './types';
 
 function isAbortError(err: unknown): boolean {
   return (
@@ -25,6 +17,8 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
   const [markdown, setMarkdown] = useState('');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [renderCode, setRenderCode] = useState<string | null>(null);
+  const [hasCompleted, setHasCompleted] = useState(false);
 
   const abortRef = useRef<AbortController | null>(null);
   const sessionIdRef = useRef<string | null>(null);
@@ -43,6 +37,8 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
     const id = sessionIdRef.current;
     sessionIdRef.current = null;
     setSessionId(null);
+    setRenderCode(null);
+    setHasCompleted(false);
     setStatus('idle');
 
     if (id) {
@@ -61,6 +57,8 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
       setMarkdown('');
       setErrorMessage(null);
       setSessionId(null);
+      setRenderCode(null);
+      setHasCompleted(false);
       sessionIdRef.current = null;
       setStatus('running');
 
@@ -81,8 +79,13 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
               if (runId !== runIdRef.current) return;
               setMarkdown((prev) => prev + chunk);
             },
+            onRenderCode: (code) => {
+              if (runId !== runIdRef.current) return;
+              setRenderCode(code);
+            },
             onDone: () => {
               if (runId !== runIdRef.current) return;
+              setHasCompleted(true);
               setStatus('idle');
             },
             onError: (err) => {
@@ -95,6 +98,7 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
         );
 
         if (runId === runIdRef.current && !controller.signal.aborted) {
+          setHasCompleted(true);
           setStatus((prev) => (prev === 'error' ? prev : 'idle'));
         }
       } catch (err) {
@@ -134,6 +138,8 @@ export function useAnalysisStream(): UseAnalysisStreamResult {
     markdown,
     sessionId,
     errorMessage,
+    renderCode,
+    hasCompleted,
     start,
     abortAndCancel,
   };

@@ -1,4 +1,4 @@
-import type { AnalysisStreamStatus } from './useAnalysisStream';
+import type { AnalysisStreamStatus } from '@/hooks/useAnalysisStream';
 
 export function getResultSubtitle(
   status: AnalysisStreamStatus,

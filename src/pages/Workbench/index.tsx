@@ -35,6 +35,11 @@ function Workbench() {
 
   const { treeData, contentByPath } = useMemo(() => buildTree(files), [files]);
 
+  const knownPaths = useMemo(
+    () => files.map((f) => f.relativePath.replace(/\\/g, '/')),
+    [files],
+  );
+
   const selectedContent =
     selectedPath !== null ? (contentByPath.get(selectedPath) ?? null) : null;
   const analysisFileName = fileNameFromPath(selectedPath);
@@ -116,6 +121,8 @@ function Workbench() {
           onClose={handleCloseAnalysis}
           fileName={analysisFileName}
           fileContent={analysisFileContent}
+          knownPaths={knownPaths}
+          onSelectFile={handleSelectFile}
         />
       ) : null}
     </div>

@@ -189,7 +189,7 @@ Expected: FAIL（模块不存在）
 创建 `resultChrome.ts`：
 
 ```ts
-import type { AnalysisStreamStatus } from './useAnalysisStream';
+import type { AnalysisStreamStatus } from '@/hooks/useAnalysisStream';
 
 export function getResultSubtitle(
   status: AnalysisStreamStatus,
@@ -505,3 +505,4 @@ Expected: 退出码 0
 |------|------|
 | 2026-08-07 | Task 5：design 状态改为已实现；同步浮窗壳/流式 design；勾选 Task 1–5 已完成步骤（Commit/浏览器冒烟除外） |
 | 2026-08-07 | 修复 body 未撑满：`.rnd` + 内层 `.panel` 高度链；补充已知实现注意点 |
+| 2026-08-07 | `AnalysisStreamStatus` 改从 `@/hooks/useAnalysisStream` 导入 |

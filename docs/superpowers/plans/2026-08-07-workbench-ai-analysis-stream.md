@@ -26,7 +26,8 @@
 | `src/apis/qoderSessions/cancel/index.ts` | `QoderSessionsCancelApi`（标准 request） |
 | `src/pages/Workbench/components/AnalysisPanel/fileNameFromPath.ts` | path → basename（可单测） |
 | `src/pages/Workbench/components/AnalysisPanel/fileNameFromPath.test.ts` | basename 单测 |
-| `src/pages/Workbench/components/AnalysisPanel/useAnalysisStream.ts` | 流式状态机 + Abort/cancel 编排 |
+| `src/hooks/useAnalysisStream/index.ts` | 流式状态机 + Abort/cancel 编排 |
+| `src/hooks/useAnalysisStream/types.ts` | `AnalysisStreamStatus` / `UseAnalysisStreamResult` |
 | `src/pages/Workbench/components/AnalysisPanel/types.ts` | 增 `fileName` / `fileContent` props |
 | `src/pages/Workbench/components/AnalysisPanel/index.tsx` | 一键分析真实触发；左栏 MarkdownPreview |
 | `src/pages/Workbench/components/AnalysisPanel/index.less` | 结果区 / 空态 / 错误条样式 |
@@ -401,7 +402,8 @@ Expected: PASS。
 ### Task 6: `useAnalysisStream` hook
 
 **Files:**
-- Create: `src/pages/Workbench/components/AnalysisPanel/useAnalysisStream.ts`
+- Create: `src/hooks/useAnalysisStream/index.ts`
+- Create: `src/hooks/useAnalysisStream/types.ts`
 
 - [ ] **Step 1: 实现 hook**
 
@@ -676,7 +678,7 @@ const handleClose = useCallback(() => {
 
 ```ts
 import MarkdownPreview from '@/components/MarkdownPreview';
-import { useAnalysisStream } from './useAnalysisStream';
+import { useAnalysisStream } from '@/hooks/useAnalysisStream';
 ```
 
 完整文件应保留 `Rnd`、最小化胶囊、`panelGeometry`、过小提示等现有行为；仅替换分析与左栏。
@@ -793,3 +795,4 @@ Which approach?
 | 日期 | 摘要 |
 |------|------|
 | 2026-08-07 | 终审修复：一键分析用 `LoadingOutlined`；`abortAndCancel` 同步 Abort + cancel 非阻塞并入口递增 runId |
+| 2026-08-07 | `useAnalysisStream` 迁至 `src/hooks/useAnalysisStream/`（`index.ts` + `types.ts`） |

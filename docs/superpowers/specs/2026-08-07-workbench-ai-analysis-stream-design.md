@@ -17,12 +17,12 @@
 2. 复用 `MarkdownPreview`；无前端逐字打字机动画
 3. 进行中再次点击：Abort 当前流；若已有 `sessionId` 则调用 cancel；清空左栏后重新发起
 4. 关闭浮窗：同上中断并清空；再开为干净空态
-5. 右栏关系图谱继续占位；不消费 `renderCode`
+5. （本切片）右栏关系图谱占位，不消费 `renderCode` — 右栏图谱消费已在后续切片 `2026-08-07-analysis-panel-relation-graph-design.md` 落地
 6. 流式请求封装在 `src/apis`；cancel 走现有 `request`；页面不直调 axios/fetch
 
 ## 非目标
 
-- 右栏关系图谱渲染与 `renderCode` 消费
+- （本切片）右栏关系图谱渲染与 `renderCode` 消费 — 已由 relation-graph 切片完成
 - 分析结果记忆 / 打开回填
 - 多文件批量分析
 - 修改后端契约或提示词
@@ -38,14 +38,14 @@
 
 | 决策点 | 选择 | 说明 |
 |--------|------|------|
-| 本轮范围 | 仅左栏预览渲染 | 与需求「处理界限」一致；右栏占位 |
+| 本轮范围 | 仅左栏预览渲染 | 与需求「处理界限」一致；本切片右栏占位（图谱见 relation-graph design） |
 | 流式观感 | chunk 累加 + 实时 Markdown | 非前端打字机；非结束后再渲染 |
 | 重分析 | Abort + cancel + 清空重开 | 后端已有 cancel |
 | 关窗 | Abort 同步 + cancel 非阻塞 | Abort/清状态立即完成；cancel fire-and-forget，不 await 后再关窗 |
 | SSE 客户端 | `@microsoft/fetch-event-source` | POST + SSE + Abort 成熟；仅 conversation 开流式例外 |
 | cancel | 标准 `request` + `WebResponse` | 与现有 apis 规范一致 |
 | 状态归属 | 面板内 hook | 避免污染 Workbench；关窗卸载即收尾 |
-| `renderCode` | 忽略 | 留给图谱切片 |
+| `renderCode` | 忽略（本切片） | 已由 `2026-08-07-analysis-panel-relation-graph-design.md` 取代：`useAnalysisStream` 缓冲，STOP 后解析渲染 |
 
 ## 技术方案
 
@@ -57,8 +57,11 @@ pages/Workbench/
   components/AnalysisPanel/
     index.tsx                    # 改：一键分析真实触发；左栏 MarkdownPreview
     types.ts                     # 增：fileName / fileContent props
-    useAnalysisStream.ts         # 新建：流式状态与中断
     index.less                   # 按需：结果区样式（走 css-module-less）
+
+src/hooks/useAnalysisStream/
+  index.ts                       # 流式状态与中断
+  types.ts                       # AnalysisStreamStatus / UseAnalysisStreamResult
 
 src/apis/qoderSessions/
   conversation/index.ts          # 新建：SSE 流式（fetch-event-source）
@@ -74,7 +77,7 @@ src/apis/qoderSessions/
 2. 若 `fileContent` 为空 → `message.warning`，不请求
 3. 若已有进行中任务 → `abortAndCancel()`（AbortSignal + 可选 cancel API）→ 清空 `markdown`
 4. 调用 `QoderSessionsConversationApi`，POST body：`{ fileName, fileContent }`
-5. 每条 SSE：解析 `SseResponse`；记录 `sessionId`；将非空 `content` 拼到缓冲区；忽略 `renderCode`
+5. 每条 SSE：解析 `SseResponse`；记录 `sessionId`；将非空 `content` 拼到缓冲区；（本切片）忽略 `renderCode` — 现已在 hook 中缓冲，见 relation-graph design
 6. `status === 'STOP'` 或流正常结束 → `status = 'idle'`（正文保留，可再点分析）
 7. 错误 → `status = 'error'`，保留已生成正文（若有）并提示
 8. 关窗 / 卸载 → `abortAndCancel()`：先 `runId++` 使旧回调失效，同步 Abort 并清状态；cancel 异步 best-effort，不阻塞关窗
@@ -152,11 +155,11 @@ type SseResponse = {
 3. 进行中再点：旧流中断（含 cancel），清空后新流
 4. 进行中关窗：中断；再开为空态
 5. 最小化不中断；还原可见内容
-6. 右栏始终占位；不渲染图谱
+6. （本切片验收）右栏占位、不渲染图谱 — 图谱渲染验收见 relation-graph design
 
 ## 后续（不在本轮）
 
-- 消费 `renderCode` 渲染右栏关系图谱
+- ~~消费 `renderCode` 渲染右栏关系图谱~~（已完成，见 `2026-08-07-analysis-panel-relation-graph-design.md`）
 - 分析结果记忆与打开回填
 - 流式中显式「停止」按钮（若产品需要；本轮靠重分析/关窗中断）
 
@@ -168,3 +171,5 @@ type SseResponse = {
 | 2026-08-07 | Task 收尾：左栏 SSE 流式呈现已实现；卸载 cleanup 递增 runId 防陈旧 setState |
 | 2026-08-07 | 终审修复：一键分析用 icon 示 running；`abortAndCancel` 同步 Abort + cancel 非阻塞，入口递增 runId |
 | 2026-08-07 | 分析按钮位置改为左栏头图右侧（见 analysis-panel-result-ui design） |
+| 2026-08-07 | 文档同步：右栏图谱已由 relation-graph 切片实现；本 spec 保留左栏流式切片范围，`renderCode` 决策标注为已被取代 |
+| 2026-08-07 | `useAnalysisStream` 迁至 `src/hooks/useAnalysisStream/`（`index.ts` + `types.ts`） |

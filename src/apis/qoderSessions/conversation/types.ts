@@ -15,6 +15,7 @@ export type SseResponse = {
 export type ConversationStreamHandlers = {
   onSession?: (sessionId: string) => void;
   onDelta?: (content: string) => void;
+  onRenderCode?: (renderCode: string) => void;
   onDone?: () => void;
   onError?: (error: Error) => void;
   signal?: AbortSignal;

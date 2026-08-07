@@ -1,4 +1,5 @@
 import MarkdownPreview from '@/components/MarkdownPreview';
+import { useAnalysisStream } from '@/hooks/useAnalysisStream';
 import {
   CloseOutlined,
   ExpandOutlined,
@@ -7,7 +8,7 @@ import {
   ThunderboltOutlined,
 } from '@ant-design/icons';
 import { Button, Space, message } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { Rnd } from 'react-rnd';
 import styles from './index.less';
 import {
@@ -15,9 +16,10 @@ import {
   isPanelTooSmall,
   type PanelBounds,
 } from './panelGeometry';
+import RelationGraph from './RelationGraph';
+import { parseGraphJson } from './RelationGraph/parseGraphJson';
 import { getAnalyzeButtonLabel, getResultSubtitle } from './resultChrome';
 import type { AnalysisPanelProps } from './types';
-import { useAnalysisStream } from './useAnalysisStream';
 
 export type { AnalysisPanelMode, AnalysisPanelProps } from './types';
 
@@ -29,7 +31,7 @@ function readViewport(): { width: number; height: number } {
 }
 
 /**
- * 分析工具浮窗：拖拽缩放、最小/全屏/关；左侧流式 Markdown 结果，右侧关系图谱占位
+ * 分析工具浮窗：拖拽缩放、最小/全屏/关；左侧流式 Markdown 结果，右侧关系图谱
  */
 function AnalysisPanel({
   mode,
@@ -37,9 +39,18 @@ function AnalysisPanel({
   onClose,
   fileName,
   fileContent,
+  knownPaths,
+  onSelectFile,
 }: AnalysisPanelProps) {
-  const { start, abortAndCancel, status, markdown, errorMessage } =
-    useAnalysisStream();
+  const {
+    start,
+    abortAndCancel,
+    status,
+    markdown,
+    errorMessage,
+    renderCode,
+    hasCompleted,
+  } = useAnalysisStream();
 
   const initialBounds = useMemo(() => {
     const { width, height } = readViewport();
@@ -51,6 +62,11 @@ function AnalysisPanel({
   const [normalBounds, setNormalBounds] = useState<PanelBounds>(initialBounds);
 
   const tooSmall = isPanelTooSmall(bounds.width, bounds.height);
+
+  const graphParsed = useMemo(
+    () => (hasCompleted ? parseGraphJson(renderCode) : null),
+    [hasCompleted, renderCode],
+  );
 
   const handleAnalyze = useCallback(() => {
     if (!fileContent.trim()) {
@@ -139,6 +155,29 @@ function AnalysisPanel({
     </Space>
   );
 
+  let graphPane: ReactNode;
+  if (status === 'running' || graphParsed === null) {
+    graphPane = (
+      <div className={styles.placeholder}>
+        {status === 'running'
+          ? '关系图谱将在分析完成后显示'
+          : '关系图谱（占位）'}
+      </div>
+    );
+  } else if (graphParsed.ok) {
+    graphPane = (
+      <RelationGraph
+        graph={graphParsed.graph}
+        knownPaths={knownPaths}
+        onSelectFile={onSelectFile}
+      />
+    );
+  } else if (graphParsed.reason === 'invalid') {
+    graphPane = <div className={styles.placeholder}>异常渲染</div>;
+  } else {
+    graphPane = <div className={styles.placeholder}>无文件关联结果</div>;
+  }
+
   const body = (
     <div className={styles.body}>
       <div className={`${styles.pane} ${styles.paneResult}`}>
@@ -177,9 +216,7 @@ function AnalysisPanel({
           )}
         </div>
       </div>
-      <div className={styles.pane}>
-        <div className={styles.placeholder}>关系图谱（占位）</div>
-      </div>
+      <div className={`${styles.pane} ${styles.paneGraph}`}>{graphPane}</div>
       {mode === 'normal' && tooSmall ? (
         <div className={styles.tooSmall}>
           尺寸过小，呈现效果不佳，请拉大弹窗

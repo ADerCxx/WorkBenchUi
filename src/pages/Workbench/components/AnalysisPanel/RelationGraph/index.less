@@ -1,0 +1,59 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.title {
+  flex-shrink: 0;
+  margin: 0 0 8px;
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.canvas {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.node {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e5e5e5);
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text, #111);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  /* 只读图：保留 Handle 供边锚点，隐藏连接点视觉 */
+  :global(.react-flow__handle) {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.nodeActive {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.nodeLabel {
+  font-weight: 600;
+  font-family: var(--heading);
+}
+
+.nodeSummary {
+  margin-top: 4px;
+  color: var(--text);
+  opacity: 0.8;
+  font-size: 11px;
+}
