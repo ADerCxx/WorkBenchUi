@@ -114,7 +114,7 @@ src/pages/Workbench/index.tsx       # 挂载 PreviewPane
 ## 后续（不在本轮实现）
 
 - 分析浮窗流式结果复用 `MarkdownPreview`  
-- frontmatter 剥离或元信息展示  
+- frontmatter 剥离与元信息展示：已由 `2026-08-06-workbench-frontmatter-strip-design.md` 实现（2026-08-06）。  
 - 若轻量高亮不够，升级 Shiki  
 
 ## 修订记录
@@ -124,3 +124,4 @@ src/pages/Workbench/index.tsx       # 挂载 PreviewPane
 - 2026-08-06：行内 `` `code` `` 改为浅色底（`var(--code-bg)` + `--text-h`）；围栏代码块仍黑底。
 - 2026-08-06：Task 5 完成 — `tsc`/`yarn build` 冒烟通过；UI 清单已按代码核验（浏览器 File System Access 交互项待人工确认）；状态改为已实现。
 - 2026-08-06：Task 4 完成 — `Workbench` 改挂 `PreviewPane`，删除 `RawPreview` 目录。
+- 2026-08-06：frontmatter 剥离/元信息条已由独立 spec `2026-08-06-workbench-frontmatter-strip-design.md` 交付（success criteria / 非目标 中「本轮不做」为历史表述）。

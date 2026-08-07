@@ -1,0 +1,79 @@
+@strip-accent: #0f766e;
+@strip-bg: color-mix(in srgb, @strip-accent 6%, var(--bg));
+@strip-more-bg: color-mix(in srgb, var(--border) 45%, var(--bg));
+
+.root {
+  margin: 0 0 1.25em;
+  padding: 10px 12px 10px 14px;
+  border-left: 3px solid @strip-accent;
+  background: @strip-bg;
+  border-radius: 0 6px 6px 0;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text-h);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(96px, max-content) 1fr;
+  gap: 4px 12px;
+  align-items: start;
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.5;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.key {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  padding-top: 2px;
+}
+
+.value {
+  font-family: var(--sans);
+  color: var(--text-h);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.valueMono {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-h);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.moreToggle {
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: @strip-accent;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.morePanel {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: @strip-more-bg;
+}
