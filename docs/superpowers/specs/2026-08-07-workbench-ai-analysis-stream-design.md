@@ -124,7 +124,7 @@ type SseResponse = {
 
 ### 交互细节
 
-- **一键分析按钮：** 进行中可再点（中断重开）；用 `LoadingOutlined` icon 表达 running（勿用 antd `loading`，会拦截 onClick）
+- **分析按钮：** 位于左栏头图右侧（见 analysis-panel-result-ui design）；进行中可再点（中断重开）；用 `LoadingOutlined` icon 表达 running（勿用 antd `loading`，会拦截 onClick）
 - **左栏空态：** 未分析且 `markdown` 为空时显示「点击一键分析，查看 AI 结果」
 - **最小化：** 不中断流；还原后可见已累加内容
 - **切换选中文件：** 不自动关窗、不自动重跑；再次分析使用当前 props
@@ -167,3 +167,4 @@ type SseResponse = {
 | 2026-08-07 | 初稿：左栏 SSE + MarkdownPreview；浮窗内聚；fetch-event-source；关窗/重分析 Abort+cancel |
 | 2026-08-07 | Task 收尾：左栏 SSE 流式呈现已实现；卸载 cleanup 递增 runId 防陈旧 setState |
 | 2026-08-07 | 终审修复：一键分析用 icon 示 running；`abortAndCancel` 同步 Abort + cancel 非阻塞，入口递增 runId |
+| 2026-08-07 | 分析按钮位置改为左栏头图右侧（见 analysis-panel-result-ui design） |

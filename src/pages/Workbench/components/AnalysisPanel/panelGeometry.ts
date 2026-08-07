@@ -1,5 +1,5 @@
-export const DEFAULT_PANEL_WIDTH = 960;
-export const DEFAULT_PANEL_HEIGHT = 640;
+export const DEFAULT_PANEL_WIDTH = 1180;
+export const DEFAULT_PANEL_HEIGHT = 760;
 export const MIN_COMFORT_WIDTH = 480;
 export const MIN_COMFORT_HEIGHT = 320;
 

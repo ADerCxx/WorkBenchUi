@@ -1,19 +1,21 @@
+import MarkdownPreview from '@/components/MarkdownPreview';
 import {
   CloseOutlined,
   ExpandOutlined,
   LoadingOutlined,
   MinusOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons';
 import { Button, Space, message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import { Rnd } from 'react-rnd';
-import MarkdownPreview from '@/components/MarkdownPreview';
 import styles from './index.less';
 import {
   getDefaultPanelBounds,
   isPanelTooSmall,
   type PanelBounds,
 } from './panelGeometry';
+import { getAnalyzeButtonLabel, getResultSubtitle } from './resultChrome';
 import type { AnalysisPanelProps } from './types';
 import { useAnalysisStream } from './useAnalysisStream';
 
@@ -104,16 +106,12 @@ function AnalysisPanel({
     );
   }
 
+  const hasMarkdown = Boolean(markdown);
+  const subtitle = getResultSubtitle(status, hasMarkdown);
+  const analyzeLabel = getAnalyzeButtonLabel(status, hasMarkdown);
+
   const toolbar = (
     <Space size="small" onMouseDown={(e) => e.stopPropagation()}>
-      <Button
-        size="small"
-        type="primary"
-        icon={status === 'running' ? <LoadingOutlined /> : undefined}
-        onClick={handleAnalyze}
-      >
-        一键分析
-      </Button>
       <Button
         size="small"
         icon={<MinusOutlined />}
@@ -143,15 +141,41 @@ function AnalysisPanel({
 
   const body = (
     <div className={styles.body}>
-      <div className={styles.pane}>
+      <div className={`${styles.pane} ${styles.paneResult}`}>
+        <div className={styles.resultHeader}>
+          <div className={styles.resultBrand}>
+            <span className={styles.resultIcon} aria-hidden>
+              <ThunderboltOutlined />
+            </span>
+            <div className={styles.resultTitleBlock}>
+              <h2 className={styles.resultTitle}>AI 分析结果</h2>
+              <p className={styles.resultSubtitle}>{subtitle}</p>
+            </div>
+          </div>
+          <div
+            className={styles.resultActions}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <Button
+              size="small"
+              type="primary"
+              icon={status === 'running' ? <LoadingOutlined /> : undefined}
+              onClick={handleAnalyze}
+            >
+              {analyzeLabel}
+            </Button>
+          </div>
+        </div>
         {errorMessage ? (
           <div className={styles.errorBar}>{errorMessage}</div>
         ) : null}
-        {markdown ? (
-          <MarkdownPreview source={markdown} className={styles.result} />
-        ) : (
-          <div className={styles.empty}>点击一键分析，查看 AI 结果</div>
-        )}
+        <div className={styles.resultCard}>
+          {markdown ? (
+            <MarkdownPreview source={markdown} className={styles.result} />
+          ) : (
+            <div className={styles.empty}>暂无结果</div>
+          )}
+        </div>
       </div>
       <div className={styles.pane}>
         <div className={styles.placeholder}>关系图谱（占位）</div>
@@ -178,7 +202,7 @@ function AnalysisPanel({
 
   return (
     <Rnd
-      className={styles.panel}
+      className={styles.rnd}
       size={{ width: bounds.width, height: bounds.height }}
       position={{ x: bounds.x, y: bounds.y }}
       minWidth={280}
@@ -203,11 +227,13 @@ function AnalysisPanel({
         setNormalBounds(next);
       }}
     >
-      <div className={styles.header}>
-        <span className={styles.title}>分析工具</span>
-        {toolbar}
+      <div className={styles.panel}>
+        <div className={styles.header}>
+          <span className={styles.title}>分析工具</span>
+          {toolbar}
+        </div>
+        {body}
       </div>
-      {body}
     </Rnd>
   );
 }
