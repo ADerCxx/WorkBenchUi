@@ -1,11 +1,13 @@
 import {
   CloseOutlined,
   ExpandOutlined,
+  LoadingOutlined,
   MinusOutlined,
 } from '@ant-design/icons';
 import { Button, Space, message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import { Rnd } from 'react-rnd';
+import MarkdownPreview from '@/components/MarkdownPreview';
 import styles from './index.less';
 import {
   getDefaultPanelBounds,
@@ -13,6 +15,7 @@ import {
   type PanelBounds,
 } from './panelGeometry';
 import type { AnalysisPanelProps } from './types';
+import { useAnalysisStream } from './useAnalysisStream';
 
 export type { AnalysisPanelMode, AnalysisPanelProps } from './types';
 
@@ -24,9 +27,18 @@ function readViewport(): { width: number; height: number } {
 }
 
 /**
- * 分析工具浮窗壳：拖拽缩放、最小/全屏/关、左右占位；一键分析仅占位提示
+ * 分析工具浮窗：拖拽缩放、最小/全屏/关；左侧流式 Markdown 结果，右侧关系图谱占位
  */
-function AnalysisPanel({ mode, onModeChange, onClose }: AnalysisPanelProps) {
+function AnalysisPanel({
+  mode,
+  onModeChange,
+  onClose,
+  fileName,
+  fileContent,
+}: AnalysisPanelProps) {
+  const { start, abortAndCancel, status, markdown, errorMessage } =
+    useAnalysisStream();
+
   const initialBounds = useMemo(() => {
     const { width, height } = readViewport();
     return getDefaultPanelBounds(width, height);
@@ -39,8 +51,21 @@ function AnalysisPanel({ mode, onModeChange, onClose }: AnalysisPanelProps) {
   const tooSmall = isPanelTooSmall(bounds.width, bounds.height);
 
   const handleAnalyze = useCallback(() => {
-    message.info('分析能力即将接入');
-  }, []);
+    if (!fileContent.trim()) {
+      message.warning('当前文件无内容可分析');
+      return;
+    }
+    void start({
+      fileName: fileName || 'context.txt',
+      fileContent,
+    });
+  }, [fileContent, fileName, start]);
+
+  const handleClose = useCallback(() => {
+    void abortAndCancel().finally(() => {
+      onClose();
+    });
+  }, [abortAndCancel, onClose]);
 
   const handleMinimize = useCallback(() => {
     if (mode === 'fullscreen') {
@@ -81,7 +106,12 @@ function AnalysisPanel({ mode, onModeChange, onClose }: AnalysisPanelProps) {
 
   const toolbar = (
     <Space size="small" onMouseDown={(e) => e.stopPropagation()}>
-      <Button size="small" type="primary" onClick={handleAnalyze}>
+      <Button
+        size="small"
+        type="primary"
+        icon={status === 'running' ? <LoadingOutlined /> : undefined}
+        onClick={handleAnalyze}
+      >
         一键分析
       </Button>
       <Button
@@ -105,7 +135,7 @@ function AnalysisPanel({ mode, onModeChange, onClose }: AnalysisPanelProps) {
       <Button
         size="small"
         icon={<CloseOutlined />}
-        onClick={onClose}
+        onClick={handleClose}
         aria-label="关闭"
       />
     </Space>
@@ -114,7 +144,14 @@ function AnalysisPanel({ mode, onModeChange, onClose }: AnalysisPanelProps) {
   const body = (
     <div className={styles.body}>
       <div className={styles.pane}>
-        <div className={styles.placeholder}>AI 分析结果（占位）</div>
+        {errorMessage ? (
+          <div className={styles.errorBar}>{errorMessage}</div>
+        ) : null}
+        {markdown ? (
+          <MarkdownPreview source={markdown} className={styles.result} />
+        ) : (
+          <div className={styles.empty}>点击一键分析，查看 AI 结果</div>
+        )}
       </div>
       <div className={styles.pane}>
         <div className={styles.placeholder}>关系图谱（占位）</div>

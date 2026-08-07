@@ -2,6 +2,7 @@ import { RegexRulesQueryEnabledApi } from '@/apis/regexRules/queryEnabled';
 import { message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import AnalysisPanel from './components/AnalysisPanel';
+import { fileNameFromPath } from './components/AnalysisPanel/fileNameFromPath';
 import type { AnalysisPanelMode } from './components/AnalysisPanel/types';
 import CatalogSidebar from './components/CatalogSidebar';
 import PreviewPane from './components/PreviewPane';
@@ -36,6 +37,8 @@ function Workbench() {
 
   const selectedContent =
     selectedPath !== null ? (contentByPath.get(selectedPath) ?? null) : null;
+  const analysisFileName = fileNameFromPath(selectedPath);
+  const analysisFileContent = selectedContent ?? '';
 
   const handlePickFolder = useCallback(async () => {
     try {
@@ -111,6 +114,8 @@ function Workbench() {
           mode={analysisMode}
           onModeChange={setAnalysisMode}
           onClose={handleCloseAnalysis}
+          fileName={analysisFileName}
+          fileContent={analysisFileContent}
         />
       ) : null}
     </div>

@@ -75,6 +75,10 @@ export default defineConfig({
         target: 'http://172.16.27.80:8889',
         changeOrigin: true,
       },
+      '/qoderSessions': {
+        target: 'http://172.16.27.80:8889',
+        changeOrigin: true,
+      },
     },
   },
 });
