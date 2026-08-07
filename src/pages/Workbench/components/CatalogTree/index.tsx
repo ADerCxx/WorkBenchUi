@@ -1,10 +1,11 @@
+import FabricLoading from '@/components/FabricLoading';
 import {
   FileMarkdownOutlined,
   FolderOpenOutlined,
   FolderOutlined,
 } from '@ant-design/icons';
 import type { TooltipProps } from 'antd';
-import { Empty, Spin, Tree, Typography } from 'antd';
+import { Empty, Tree, Typography } from 'antd';
 import type { DataNode } from 'antd/es/tree';
 import styles from './index.less';
 import type { CatalogTreeProps } from './types';
@@ -64,7 +65,7 @@ function CatalogTree({
   if (loading) {
     return (
       <div className={styles.loading}>
-        <Spin />
+        <FabricLoading size="sm" />
       </div>
     );
   }

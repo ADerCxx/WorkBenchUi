@@ -1,3 +1,4 @@
+import FabricLoading from '@/components/FabricLoading';
 import MarkdownPreview from '@/components/MarkdownPreview';
 import { useAnalysisStream } from '@/hooks/useAnalysisStream';
 import {
@@ -156,14 +157,14 @@ function AnalysisPanel({
   );
 
   let graphPane: ReactNode;
-  if (status === 'running' || graphParsed === null) {
+  if (status === 'running') {
     graphPane = (
-      <div className={styles.placeholder}>
-        {status === 'running'
-          ? '关系图谱将在分析完成后显示'
-          : '关系图谱（占位）'}
+      <div className={styles.paneLoading}>
+        <FabricLoading size="sm" />
       </div>
     );
+  } else if (graphParsed === null) {
+    graphPane = <div className={styles.placeholder}>关系图谱（占位）</div>;
   } else if (graphParsed.ok) {
     graphPane = (
       <RelationGraph
@@ -209,7 +210,11 @@ function AnalysisPanel({
           <div className={styles.errorBar}>{errorMessage}</div>
         ) : null}
         <div className={styles.resultCard}>
-          {markdown ? (
+          {status === 'running' && !markdown ? (
+            <div className={styles.resultCardLoading}>
+              <FabricLoading size="sm" />
+            </div>
+          ) : markdown ? (
             <MarkdownPreview source={markdown} className={styles.result} />
           ) : (
             <div className={styles.empty}>暂无结果</div>

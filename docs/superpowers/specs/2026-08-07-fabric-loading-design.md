@@ -114,3 +114,4 @@ import FabricLoading from '@/components/FabricLoading';
 | 日期 | 摘要 |
 |------|------|
 | 2026-08-07 | 实现落地；a11y 采用 role="status"（对齐 plan） |
+| 2026-08-07 | 已接入工作台目录树与分析工具区域 loading（按钮未改） |
