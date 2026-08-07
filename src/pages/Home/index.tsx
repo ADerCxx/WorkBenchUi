@@ -24,9 +24,9 @@ function Home() {
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <p className={styles.meta}>产品 · 工作台</p>
-        <h1 className={styles.title}>欢迎使用 fabric</h1>
-        <p className={styles.subtitle}>本地扫描 · 白名单匹配 · 原文预览</p>
+        <p className={styles.meta}>Fabric · 工作台</p>
+        <h1 className={styles.title}>欢迎使用 Fabric </h1>
+        <p className={styles.subtitle}>原文预览 · 文档分析 · 关系图谱</p>
         <Link to="/workbench" className={styles.cta}>
           进入工作台
           <span className={styles.ctaArrow} aria-hidden>
