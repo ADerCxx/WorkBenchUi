@@ -44,8 +44,13 @@
 
 ```less
 .loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
   padding: 24px;
-  text-align: center;
 }
 
 .empty {
@@ -458,3 +463,4 @@ Expected: 全部通过。
 - 折叠钮：圆形 28px、`border-radius: 50%`、底色 + 浅阴影；悬浮用 antd `Tooltip` + `styles.container`（`rgba(0,0,0,0.72)`、`borderRadius: 8`、无箭头），不用原生 `title`。
 - 文件名截断 Tip 同样使用上述 dark tooltip styles。
 - 树节点间距：收紧 switcher `margin-inline-end`、`.ant-tree-iconEle` 宽 16px、content-wrapper `gap: 4px` + `padding-inline: 2px 4px`，避免展开图标与标题之间过空。
+- 扫描 loading：`.loading` 需 `height/min-height: 100%` + flex 居中，才能在侧栏内容区垂直居中（见 fabric-loading-integration）。

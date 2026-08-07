@@ -78,6 +78,9 @@ if (loading) {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
   padding: 24px;
 }
 ```
@@ -87,7 +90,7 @@ if (loading) {
 Run: 启动开发服务，打开 `/workbench`，点击「选择文件夹」触发扫描。
 
 Expected:
-- 扫描中目录区出现品牌扫光 `FabricLoading`（非 antd 转圈）
+- 扫描中目录区出现品牌扫光 `FabricLoading`（非 antd 转圈），且在侧栏内容区水平垂直居中（非贴顶）
 - 顶栏「选择文件夹」按钮仍为 antd `loading` 样式（未改）
 - 扫描结束后正常显示树或 Empty
 
@@ -122,8 +125,10 @@ import FabricLoading from '@/components/FabricLoading';
   min-height: 120px;
 }
 
+/* .resultCard 需为 flex 列，loading 才能 flex:1 填满后居中 */
 .resultCardLoading {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   min-height: 160px;
@@ -254,7 +259,14 @@ Expected:
 1. `markdown` 初始为 `''`，`!markdown` 对空串为 true；`start()` 会先 `setMarkdown('')`，重新分析时结果区会再次进入 loading，符合预期。
 2. 图谱失败路径依赖 `status === 'error'` 离开 `running`，不要改成 `!hasCompleted`。
 3. `paneGraph` 已是 flex 列；`.paneLoading` 用 `flex: 1` 才能在图谱栏垂直居中。
-4. 同步文档时遵守 `.cursor/skills/sync-design-plan/SKILL.md`：决策与验收写 design，步骤勾选写 plan。
+4. `.resultCard` 需 `display: flex; flex-direction: column`，`.resultCardLoading` 用 `flex: 1` 才能在结果卡片内垂直居中；目录树 `.loading` 需 `height/min-height: 100%` 拉满侧栏内容区。
+5. 同步文档时遵守 `.cursor/skills/sync-design-plan/SKILL.md`：决策与验收写 design，步骤勾选写 plan。
+
+## 修订记录
+
+| 日期 | 摘要 |
+|------|------|
+| 2026-08-07 | 目录区 / 结果区 loading 容器拉满父级后居中（修贴顶） |
 
 ---
 

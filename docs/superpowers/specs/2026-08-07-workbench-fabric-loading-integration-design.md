@@ -91,8 +91,10 @@ if (loading) {
 
 ### 布局
 
-- 目录树：沿用 `.loading`；改为 flex 居中（若当前 `text-align:center` 对 inline-flex 图标不够）
-- 结果区 / 图谱区：在现有 pane / placeholder 容器内水平垂直居中，不引入全屏遮罩
+- 目录树：`.loading` 拉满侧栏内容区高度（`height/min-height: 100%`）+ flex 水平垂直居中
+- 结果区：`.resultCard` 为 flex 列；`.resultCardLoading` 用 `flex: 1` 填满卡片后居中
+- 图谱区：`.paneLoading` 用 `flex: 1` 在 pane 内居中
+- 均不引入全屏遮罩
 
 ## 验收
 
@@ -102,6 +104,7 @@ if (loading) {
 - [x] 分析失败或取消：图谱区 / 结果区 loading 结束，不永久转圈
 - [x] 按钮 loading 视觉与改前一致
 - [x] `FabricLoading` 的 props / 尺寸档未改
+- [x] 目录区 / 结果区 loading 在各自可视区域内水平垂直居中（非贴顶）
 
 ## 修订记录
 
@@ -109,3 +112,4 @@ if (loading) {
 |------|------|
 | 2026-08-07 | 初稿：目录树替换 + 分析双区接入；图谱条件定为 A（`running`） |
 | 2026-08-07 | 工作台 CatalogTree + AnalysisPanel 双区接入落地 |
+| 2026-08-07 | 目录区 / 结果区 loading 容器拉满父级后居中（修贴顶） |
