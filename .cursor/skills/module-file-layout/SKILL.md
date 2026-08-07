@@ -2,14 +2,14 @@
 name: module-file-layout
 description: >-
   Use when 在 WorkBench 新建或重构组件/业务模块目录、编写 index.tsx 入口、types.ts 类型落盘、
-  type 与 interface 分工、或把单文件组件拆成文件夹模块时。
+  type 与 interface 分工、把单文件组件拆成文件夹模块、新建或迁移自定义 React hook（src/hooks、useXxx）时。
 ---
 
 # WorkBench 模块目录与类型落盘约定
 
 ## Overview
 
-约束 `src/**` 下**组件与业务模块如何摆放**，以及 **`type` / `interface` 写在哪里**。  
+约束 `src/**` 下**组件与业务模块如何摆放**、**自定义 hook 落盘**，以及 **`type` / `interface` 写在哪里**。  
 目标：一模块一文件夹，入口符合直觉，类型边界清晰。
 
 **Violating the letter of the rules is violating the spirit of the rules.**
@@ -18,7 +18,8 @@ description: >-
 
 ## When to Use
 
-- 新建页面、组件、业务子模块（scan、hooks、utils 等可独立成模块的部分）
+- 新建页面、组件、业务子模块（scan、utils 等可独立成模块的部分）
+- 新建或迁移自定义 React hook（`useXxx`）
 - 把 `Foo.tsx` 单文件拆成 `Foo/` 文件夹
 - 新增 Props、领域模型、`export type`，或调整 `types.ts`
 - 不确定 `interface` 该留在业务文件还是进 `types.ts`
@@ -84,6 +85,47 @@ components/FooBar/types.ts   # 需要时再建
 ```
 
 已有单文件不必为「形式完美」强行搬家；**新增模块或该文件开始膨胀（类型外溢、拆 helper）时再文件夹化**。
+
+---
+
+## 核心约定：自定义 hook 落盘
+
+### 一句话
+
+可复用或跨组件的 hook → **`src/hooks/<hookName>/`**；目录名 = hook 名，**`index.ts` 为入口**。
+
+### 推荐结构
+
+```text
+src/hooks/useFoo/
+├── index.ts    # hook 实现；对外类型从 types re-export
+└── types.ts    # 对外 export type（有则建）
+```
+
+| 项 | 约定 |
+| --- | --- |
+| 目录 | `src/hooks/<hookName>/`，`hookName` 与导出函数同名（如 `useAnalysisStream`） |
+| 入口 | `index.ts`；不要 `src/hooks/useFoo.ts` 单文件堆放，也不要并列第二入口 |
+| 类型 | 对外 `export type` → 同目录 `types.ts`，入口 `export type { ... } from './types'` |
+| 引用 | `@/hooks/<hookName>` |
+
+### 何时放组件旁 / 何时迁出
+
+| 场景 | 放置 |
+| --- | --- |
+| 跨组件复用，或与具体 UI 解耦的状态/流编排 | `src/hooks/<hookName>/` |
+| 仅某一组件私用且极薄（几行、无独立类型） | 可暂留该组件目录 |
+| 组件旁 hook 开始膨胀、导出类型，或被第二处引用 | 迁到 `src/hooks/<hookName>/` |
+
+### ❌ 避免
+
+```text
+# 可复用 hook 塞在业务组件旁，难发现、难复用
+components/AnalysisPanel/useAnalysisStream.ts
+
+# hooks 根下单文件堆砌
+src/hooks/useAnalysisStream.ts
+```
 
 ---
 
@@ -196,6 +238,8 @@ export interface SharedScanOptions { /* ... */ }
 ## 新建 / 重构自检
 
 - [ ] 是否一模块一文件夹，对外入口是否为 `index.tsx` / `index.ts`？
+- [ ] 可复用 hook 是否落在 `src/hooks/<hookName>/`，入口是否为 `index.ts`？
+- [ ] hook 对外类型是否在同目录 `types.ts` 并从入口 re-export？
 - [ ] 新增的 **`export type` / 对外 Props / 领域模型** 是否在模块 `types.ts`？
 - [ ] 仅单文件内部的 `interface` 才留在业务文件？
 - [ ] 跨文件复用或需 export 的 `interface` 是否已迁入 `types.ts`？
@@ -212,4 +256,5 @@ export interface SharedScanOptions { /* ... */ }
 | 业务域 + types 集中 | `src/pages/Workbench/scan/types.ts` |
 | 页面入口文件夹 | `src/pages/Workbench/index.tsx` |
 | 组件模块（入口 + Props） | `src/pages/Workbench/components/CatalogTree/{index.tsx,types.ts}` |
+| 自定义 hook（入口 + types） | `src/hooks/useAnalysisStream/{index.ts,types.ts}` |
 | 同结构参考 | `WorkbenchHeader/`、`RawPreview/` |
