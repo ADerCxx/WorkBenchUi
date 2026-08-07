@@ -53,7 +53,7 @@
 
 ```
 pages/Workbench
-├─ 顶栏：fabric 图标 + 标题图 `fabricNameIcon.png`（alt「知识织物工作台」）+「选择文件夹」
+├─ 顶栏：品牌区（fabric 图标 + 标题图 `fabricNameIcon.png`，alt「知识织物工作台」）为 `Link` 至 `/`（直接回首页，无确认）+「选择文件夹」
 ├─ 左栏：目录树 / Empty / Spin
 └─ 右栏：Empty 或 路径 + 原文
 ```
@@ -179,3 +179,4 @@ type WorkbenchTreeNode = {
 | 2026-08-05 | 顶栏标题改为「知识织物工作台」，前置 `fabricIcon.png` |
 | 2026-08-05 | Header / CatalogTree / RawPreview 静态样式迁入同级 `index.less`（CSS Module） |
 | 2026-08-06 | 顶栏文字标题改为图片 `fabricNameIcon.png`（保留前置 `fabricIcon.png`） |
+| 2026-08-07 | 顶栏品牌区点击直达首页 `/`（`Link`，无离开确认） |

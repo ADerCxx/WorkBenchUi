@@ -1,5 +1,6 @@
 import { ExperimentOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 import styles from './index.less';
 import type { WorkbenchHeaderProps } from './types';
 
@@ -18,7 +19,7 @@ function WorkbenchHeader({
   return (
     <header className={styles.header}>
       <div className={styles.brandRow}>
-        <div className={styles.brand}>
+        <Link className={styles.brand} to="/" aria-label="返回首页">
           <img
             className={styles.logo}
             src={`${import.meta.env.BASE_URL}fabricIcon.png`}
@@ -29,7 +30,7 @@ function WorkbenchHeader({
             src={`${import.meta.env.BASE_URL}fabricNameIcon.png`}
             alt="知识织物工作台"
           />
-        </div>
+        </Link>
         {rootName ? (
           <Typography.Text type="secondary">{rootName}</Typography.Text>
         ) : null}

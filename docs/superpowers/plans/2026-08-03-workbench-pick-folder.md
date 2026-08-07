@@ -1075,3 +1075,4 @@ git commit -m "docs: mark workbench pick-folder design as implemented"
 | 2026-08-05 | 顶栏标题改为图标 +「知识织物工作台」（与 MainLayout `fabricIcon.png` 一致） |
 | 2026-08-05 | Task 6 子组件静态样式迁入同级 `index.less`（CSS Module） |
 | 2026-08-06 | 顶栏文字标题改为图片 `fabricNameIcon.png`（保留前置 `fabricIcon.png`） |
+| 2026-08-07 | 顶栏品牌区改为 `Link to="/"`（`aria-label="返回首页"`，hover 轻微透明） |
