@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 外壳宽高占满视口且不滚动，仅内容区/子容器滚动；ConfigProvider primary 为 `#aa3bff`；全局与 Antd 常见滚动容器使用统一的 primary 半透明细圆角滚动条。
+**Goal:** 外壳宽高占满视口且不滚动，仅内容区/子容器滚动；ConfigProvider primary 与 `--accent` 对齐；全局与 Antd 常见滚动容器使用统一的灰黑半透明细圆角滚动条（与主色解耦）。
 
-**Architecture:** 在全局样式锁定 `html/body/#root` 高度与 `overflow: hidden`；三个 Layout 的内容出口设为 `flex:1; min-height:0; overflow:auto`。滚动条用 CSS 变量（跟随 `--accent`）挂到全局选择器，并补齐 Antd 表体/Modal/下拉等容器。主色仅在 `main.tsx` 的 ConfigProvider 声明一次。
+**Architecture:** 在全局样式锁定 `html/body/#root` 高度与 `overflow: hidden`；三个 Layout 的内容出口设为 `flex:1; min-height:0; overflow:auto`。滚动条用 CSS 变量（灰黑半透明；暗色白半透明）挂到全局选择器，并补齐 Antd 表体/Modal/下拉等容器。主色仅在 `main.tsx` 的 ConfigProvider 声明一次。
 
 **Tech Stack:** Less、Antd 6 ConfigProvider、现有 `src/layouts/*`
 
@@ -68,11 +68,16 @@
 
 ```less
   --scrollbar-track: transparent;
-  --scrollbar-thumb: color-mix(in srgb, var(--accent) 35%, transparent);
-  --scrollbar-thumb-hover: color-mix(in srgb, var(--accent) 55%, transparent);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.28);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.42);
 ```
 
-暗色分支已改写 `--accent`，无需再写一套 thumb 色。
+暗色分支另写白半透明 thumb（同透明度）：
+
+```less
+  --scrollbar-thumb: rgba(255, 255, 255, 0.28);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.42);
+```
 
 - [x] **Step 2: 锁定 html / body / #root，禁止外壳滚动**
 
@@ -262,7 +267,7 @@ Run: `npm run dev`，检查：
 - `/`、`/regex-settings`：窗口无整页滚动；拉高内容时仅 `.main` 滚
 - `/workbench`：顶栏+侧栏固定，右侧内容滚
 - `/blank`：壳不撑出 body 滚动
-- Table 等区域滚动条为细圆角、accent 半透明
+- Table 等区域滚动条为细圆角、灰黑半透明（不过深）
 
 - [ ] **Step 5: Commit（默认跳过）**
 
@@ -293,6 +298,12 @@ Run: `npm run dev`，检查：
 | html/body/根壳不滚 | Task 2 |
 | 仅内部滚动 | Task 3 |
 | colorPrimary `#aa3bff` | Task 1 |
-| 滚动条统一（细/圆角/primary 半透明） | Task 2 |
+| 滚动条统一（细/圆角/灰黑半透明） | Task 2 |
 | 全局 + Antd 容器 | Task 2 Step 3–4 |
 | 不改路由/apis/业务逻辑 | 无对应改动 Task |
+
+---
+
+## 修订记录
+
+- 2026-08-07：滚动条滑块改为常见灰黑半透明（亮色黑 / 暗色白；与主色解耦），同步 design 决策与验收口径
