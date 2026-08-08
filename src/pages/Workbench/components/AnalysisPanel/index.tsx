@@ -164,7 +164,7 @@ function AnalysisPanel({
       </div>
     );
   } else if (graphParsed === null) {
-    graphPane = <div className={styles.placeholder}>关系图谱（占位）</div>;
+    graphPane = <div className={styles.placeholder}>关系图谱</div>;
   } else if (graphParsed.ok) {
     graphPane = (
       <RelationGraph
