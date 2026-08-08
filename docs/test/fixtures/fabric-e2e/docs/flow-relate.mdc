@@ -1,0 +1,17 @@
+---
+name: flow-relate
+description: Fabric E2E 关系分析样例
+---
+
+# 流程关系样例
+
+本文件依赖同目录的 [flow-preview.md](./flow-preview.md) 作为预览对照。
+
+## 职责
+
+- 作为 AI 分析入口（一键分析）
+- 期望图谱中出现本文件与 `flow-preview.md` 的关联节点
+
+## 非目标
+
+- 不承载真实业务 Skill 逻辑
