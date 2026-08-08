@@ -1,57 +1,58 @@
-import js from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import js from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
     ignores: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/coverage/**",
-      "**/.next/**",
-      "**/out/**",
-      "**/.umi/**",
-      "**/.dumi/**",
-      ".prettierrc.cjs",
-      "eslint.config.mjs",
-      "eslint.config.js.bak",
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/.next/**',
+      '**/out/**',
+      '**/.umi/**',
+      '**/.dumi/**',
+      '.prettierrc.cjs',
+      'eslint.config.mjs',
+      'eslint.config.js.bak',
     ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "module",
+      sourceType: 'module',
       globals: {
         ...globals.browser,
         ...globals.es2022,
       },
       parserOptions: {
         ecmaFeatures: { jsx: true },
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
       react,
-      "react-hooks": reactHooks,
+      'react-hooks': reactHooks,
     },
     settings: {
-      react: { version: "detect" },
+      react: { version: 'detect' },
     },
     rules: {
       ...react.configs.recommended.rules,
-      ...react.configs["jsx-runtime"].rules,
+      ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       // 与 ForgeKit「简洁、少噪声」取向一致的轻量收紧（可按项目再调）
-      "react/prop-types": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      'react/prop-types': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
     },
   },
