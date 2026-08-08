@@ -1,9 +1,8 @@
 ---
 name: react-ts-lint-format-init
 description: >-
-  在 React + TypeScript 仓库初始化 ESLint 9 Flat + Prettier 3 + EditorConfig
-  （不含 Umi / husky）。用户要求初始化 lint/format、安装编辑期 ESLint/Prettier，
-  或点名本 Skill / 工具包时使用。
+  Use when 在 React + TypeScript 仓库初始化或对齐 ESLint / Prettier / EditorConfig
+  （不含 Umi / husky），或用户点名本 Skill / 工具包时。
 ---
 
 # React + TypeScript：ESLint / Prettier / EditorConfig 初始化

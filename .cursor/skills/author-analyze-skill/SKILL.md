@@ -1,9 +1,8 @@
 ---
 name: author-analyze-skill
 description: >-
-  Use when 需要按文档类型产出「解析 Skill」：先在仓库找该类文档的生成约定与样例，
-  抽共性或退回读者问题清单，确认探索摘要后，在目标项目根落盘 <name>/SKILL.md。
-  显式点名使用；用于编写可带走的文档分析手册，不负责对单份文档做分析本身。
+  Use when 要按文档类型产出可带走的「解析 Skill」/ analyze skill（显式点名），
+  而非分析用户手里的某一份业务文档时。
 ---
 
 # 编写文档解析 Skill

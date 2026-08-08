@@ -1,9 +1,8 @@
 ---
 name: sync-design-plan
 description: >-
-  superPowers 模块代码变更后同步回写 design 与 plan 文档。在实现/修改 src/pages、
-  src/apis、src/router 业务代码、执行 plan Task、用户微调需求或 UI、实现与文档不一致、
-  或用户要求同步 design/plan 时使用。须与 .cursor/rules/sync-design-plan.mdc 一并遵守。
+  Use when 实现/修改 src/pages、src/apis、src/router 业务代码、执行 plan Task、
+  用户微调需求或 UI、实现与文档不一致、或用户要求同步 design/plan 时。
 ---
 
 # superPowers：design 与 plan 文档同步

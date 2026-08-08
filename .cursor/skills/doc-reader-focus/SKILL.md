@@ -2,8 +2,7 @@
 name: doc-reader-focus
 description: >-
   Use when 编写或修改 AI 范式文档（superpowers design/plan、OpenSpec、.cursor/skills、
-  .cursor/rules、templates 说明等）：先定角色与读者，删除过程噪声；写 Skill 时按通用规范、
-  项目遵循 Skill（非 Skill 迁就项目）；只保留对后续实现/执行仍有约束力的信息。
+  .cursor/rules、templates 说明等），或把探索对话沉淀进仓库文档时。
 ---
 
 # 文档读者信号（去过程噪声）

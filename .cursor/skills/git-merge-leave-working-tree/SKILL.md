@@ -1,9 +1,8 @@
 ---
 name: git-merge-leave-working-tree
 description: >-
-  功能分支开发后合回 main 时，把改动留在工作区由用户手动 commit，不替用户提交。
-  在 finishing-a-development-branch 选「本地合并回 main」、subagent-driven-development
-  收尾合回、或用户说合回 main / 合并到主分支 / 改动留在工作区自己提交时使用。
+  Use when 合回 main / 合并到主分支、finishing-a-development-branch 选「本地合并回 main」、
+  subagent-driven-development 收尾合回，或用户要求改动留在工作区自行 commit 时。
 ---
 
 # 合回 main：改动留在工作区

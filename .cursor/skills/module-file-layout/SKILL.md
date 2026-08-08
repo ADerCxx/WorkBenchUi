@@ -1,11 +1,12 @@
 ---
 name: module-file-layout
 description: >-
-  Use when 在 WorkBench 新建或重构组件/业务模块目录、编写 index.tsx 入口、types.ts 类型落盘、
-  type 与 interface 分工、把单文件组件拆成文件夹模块、新建或迁移自定义 React hook（src/hooks、useXxx）时。
+  Use when 新建或重构组件/业务模块目录、编写 index.tsx 入口、types.ts 类型落盘、
+  type 与 interface 分工、把单文件组件拆成文件夹模块、新建或迁移自定义 React hook
+  （src/hooks、useXxx）时。
 ---
 
-# WorkBench 模块目录与类型落盘约定
+# 模块目录与类型落盘约定
 
 ## Overview
 
@@ -18,7 +19,7 @@ description: >-
 
 ## When to Use
 
-- 新建页面、组件、业务子模块（scan、utils 等可独立成模块的部分）
+- 新建页面、组件、业务子模块（可独立成模块的部分）
 - 新建或迁移自定义 React hook（`useXxx`）
 - 把 `Foo.tsx` 单文件拆成 `Foo/` 文件夹
 - 新增 Props、领域模型、`export type`，或调整 `types.ts`
@@ -29,7 +30,8 @@ description: >-
 - 仅改样式写法/内联迁 Less → 用 `css-module-less`（本 skill 不管 class 与 `style` 取舍）
 - 仅改 Markdown、配置文件
 - 全局环境声明（`*.d.ts`）→ 不受本 skill 约束
-- 纯接口对接模板 → 用 `workbench-api-request`
+- 纯接口对接模板 → 用 `api-request`
+
 ---
 
 ## 核心约定：一模块一文件夹
@@ -49,7 +51,7 @@ ModuleName/
 └── ...            # 同模块内的实现文件（helpers、子逻辑）
 ```
 
-布局与视觉样式默认 **CSS Module + 同级 `index.less`**，禁止大块静态内联；完整约定见 **`css-module-less`**。
+布局与视觉样式默认 **CSS Module + 同级 `index.less`**，禁止大块静态内联；完整约定见 **`css-module-less`**。  
 含子组件时：
 
 ```text
@@ -66,7 +68,7 @@ ModuleName/
 
 | 项 | 约定 |
 | --- | --- |
-| 文件夹 | PascalCase（组件）或 camelCase（纯逻辑域，如 `scan`）— 与仓库现有风格对齐 |
+| 文件夹 | PascalCase（组件）或 camelCase（纯逻辑域）— 与仓库现有风格对齐 |
 | 入口 | 统一 `index.tsx` / `index.ts`，不要再并列一个 `ModuleName.tsx` 当第二入口 |
 | 类型文件 | 一律 `types.ts`（不用 `type.ts`、`interfaces.ts`） |
 
@@ -104,10 +106,10 @@ src/hooks/useFoo/
 
 | 项 | 约定 |
 | --- | --- |
-| 目录 | `src/hooks/<hookName>/`，`hookName` 与导出函数同名（如 `useAnalysisStream`） |
+| 目录 | `src/hooks/<hookName>/`，`hookName` 与导出函数同名（如 `useFoo`） |
 | 入口 | `index.ts`；不要 `src/hooks/useFoo.ts` 单文件堆放，也不要并列第二入口 |
 | 类型 | 对外 `export type` → 同目录 `types.ts`，入口 `export type { ... } from './types'` |
-| 引用 | `@/hooks/<hookName>` |
+| 引用 | `@/hooks/<hookName>`（别名以仓库为准） |
 
 ### 何时放组件旁 / 何时迁出
 
@@ -121,10 +123,10 @@ src/hooks/useFoo/
 
 ```text
 # 可复用 hook 塞在业务组件旁，难发现、难复用
-components/AnalysisPanel/useAnalysisStream.ts
+components/SomePanel/useFoo.ts
 
 # hooks 根下单文件堆砌
-src/hooks/useAnalysisStream.ts
+src/hooks/useFoo.ts
 ```
 
 ---
@@ -153,23 +155,15 @@ src/hooks/useAnalysisStream.ts
 
 ```typescript
 // ModuleName/index.tsx
-export type { CatalogTreeProps, WorkbenchTreeNode } from './types';
-export { default } from './CatalogTreeImpl'; // 若实现拆文件；多数情况实现就写在 index.tsx
-```
+import type { FooProps } from './types';
 
-更常见写法：实现直接写在 `index.tsx`，只 re-export 类型：
+export type { FooProps } from './types';
 
-```typescript
-// ModuleName/index.tsx
-import type { CatalogTreeProps } from './types';
-
-export type { CatalogTreeProps } from './types';
-
-function CatalogTree(props: CatalogTreeProps) {
+function Foo(props: FooProps) {
   // ...
 }
 
-export default CatalogTree;
+export default Foo;
 ```
 
 ---
@@ -179,34 +173,33 @@ export default CatalogTree;
 ### ✅ 推荐：领域类型进 types.ts
 
 ```typescript
-// src/pages/Workbench/scan/types.ts
-export type WorkbenchTreeNode = {
+// ModuleName/types.ts
+export type TreeNode = {
   key: string;
   title: string;
   isLeaf?: boolean;
-  children?: WorkbenchTreeNode[];
+  children?: TreeNode[];
 };
 ```
 
 ### ✅ 推荐：仅本文件用的 interface 留在组件内
 
 ```typescript
-// components/CatalogTree/index.tsx
-interface CatalogTreeViewState {
+// components/Foo/index.tsx
+interface FooViewState {
   expanded: boolean;
 }
 
-function CatalogTree(/* ... */) {
-  // CatalogTreeViewState 仅此处使用
+function Foo(/* ... */) {
+  // FooViewState 仅此处使用
 }
 ```
 
-若 Props 要对外或被测试/父模块引用，改为：
+若 Props 要对外或被测试/父模块引用：
 
 ```typescript
-// components/CatalogTree/types.ts
-export type CatalogTreeProps = {
-  hasPicked: boolean;
+// components/Foo/types.ts
+export type FooProps = {
   loading: boolean;
   // ...
 };
@@ -221,7 +214,7 @@ export type CardStatus = 'ok' | 'fail';
 
 ```typescript
 // helpers.ts — 多文件共用的结构不要散落
-export interface SharedScanOptions { /* ... */ }
+export interface SharedOptions { /* ... */ }
 ```
 
 ---
@@ -247,14 +240,4 @@ export interface SharedScanOptions { /* ... */ }
 - [ ] 未为「好看」无谓搬迁稳定旧文件；膨胀或新建时才文件夹化？
 - [ ] 有 UI 的模块是否配备 `index.less`，且样式写法符合 `css-module-less`？
 
----
-
-## 仓库内标杆
-
-| 说明 | 路径 |
-| --- | --- |
-| 业务域 + types 集中 | `src/pages/Workbench/scan/types.ts` |
-| 页面入口文件夹 | `src/pages/Workbench/index.tsx` |
-| 组件模块（入口 + Props） | `src/pages/Workbench/components/CatalogTree/{index.tsx,types.ts}` |
-| 自定义 hook（入口 + types） | `src/hooks/useAnalysisStream/{index.ts,types.ts}` |
-| 同结构参考 | `WorkbenchHeader/`、`RawPreview/` |
+仓库内标杆路径见 [reference.md](reference.md)。
