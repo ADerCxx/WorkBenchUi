@@ -7,6 +7,7 @@ import {
   type RegexRulesQueryForm,
 } from '@/apis/regexRules/types';
 import { RegexRulesUpdateApi } from '@/apis/regexRules/update';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useAntdTable, useRequest } from 'ahooks';
 import {
   Button,
@@ -18,12 +19,39 @@ import {
   Space,
   Switch,
   Table,
+  Tooltip,
   Typography,
   message,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import styles from './index.less';
+
+/** 工作台白名单扫描约定（悬停提示） */
+const SCAN_RULE_TIP = (
+  <div className={styles.scanTip}>
+    <p className={styles.scanTipLead}>工作台按启用规则扫描项目根：</p>
+    <ul className={styles.scanTipList}>
+      <li>
+        <strong>目录名</strong>
+        ：仅匹配项目根下第一层目录（字面量，忽略大小写），如{' '}
+        <code>.cursor</code>、<code>docs</code>
+      </li>
+      <li>
+        <strong>文件正则</strong>
+        ：进入该目录后递归全部子目录，只匹配文件名（非整段路径）；勿包首尾斜杠
+      </li>
+      <li>
+        <strong>多规则</strong>
+        ：同目录多条文件正则任一命中即可；不同目录各自进入
+      </li>
+      <li>
+        <strong>启停</strong>
+        ：仅启用规则参与扫描；空目录名或非法正则会被跳过
+      </li>
+    </ul>
+  </div>
+);
 
 /**
  * 校验文件正则字面量是否可编译
@@ -195,9 +223,17 @@ function RegexSettings() {
     <section className={styles.page}>
       <Space className={styles.toolbar}>
         <div>
-          <Typography.Title level={3} className={styles.heading}>
-            正则表达式设置
-          </Typography.Title>
+          <div className={styles.titleRow}>
+            <Typography.Title level={3} className={styles.heading}>
+              正则表达式设置
+            </Typography.Title>
+            <Tooltip title={SCAN_RULE_TIP} placement="bottomLeft">
+              <QuestionCircleOutlined
+                className={styles.tipIcon}
+                aria-label="扫描约定说明"
+              />
+            </Tooltip>
+          </div>
           <Typography.Paragraph type="secondary" className={styles.desc}>
             用于扫描文件夹的白名单（目录名 + 文件正则）。
           </Typography.Paragraph>

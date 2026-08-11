@@ -703,3 +703,4 @@ git commit -m "docs: update routing spec for regex settings CRUD"
 
 - 2026-08-04：真实后端联调已另开 `2026-08-04-regex-settings-api-integration`；本 plan 的 `src/apis/regex/**` mock 路径已废弃
 - 2026-08-05：页面静态样式迁入同级 `index.less`（CSS Module），去掉 `style={{}}`
+- 2026-08-11：页头标题右侧 `QuestionCircleOutlined` + `Tooltip` 展示扫描约定；样式见 `titleRow` / `tipIcon` / `scanTip*`

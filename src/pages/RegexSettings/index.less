@@ -8,14 +8,53 @@
   margin-bottom: 16px;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .heading {
   margin: 0;
   font-family: var(--heading);
   font-weight: 700;
 }
 
+.tipIcon {
+  color: var(--text);
+  font-size: 16px;
+  cursor: help;
+  opacity: 0.55;
+
+  &:hover {
+    opacity: 0.9;
+    color: var(--accent);
+  }
+}
+
 .desc {
   margin-bottom: 0;
+}
+
+.scanTip {
+  max-width: 360px;
+}
+
+.scanTipLead {
+  margin: 0 0 8px;
+}
+
+.scanTipList {
+  margin: 0;
+  padding-left: 1.2em;
+
+  li + li {
+    margin-top: 6px;
+  }
+
+  code {
+    font-family: var(--mono);
+  }
 }
 
 .filterForm {

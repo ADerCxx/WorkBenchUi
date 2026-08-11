@@ -45,12 +45,14 @@
 
 | 区域 | 组件 | 行为 |
 |------|------|------|
-| 页头 | `Typography.Title` + `Button` | 「新建」打开 Modal |
+| 页头 | `Typography.Title` + `QuestionCircleOutlined`/`Tooltip` + `Button` | 标题右侧提示图标，悬停展示白名单扫描约定；「新建」打开 Modal |
 | 筛选 | `Form`：名称 `Input`、启用 `Select` | `search.submit` / `search.reset` |
 | 表格 | `Table` + `tableProps` | 名称、正则、说明、启用、更新时间、操作；分页用 `tableProps.pagination` |
 | 启停 | 行内 `Switch` | toggle API，成功后 `refresh` |
 | 操作 | `Button` + `Popconfirm` | 编辑 / 删除 |
 | 表单 | `Modal` + `Form` | name、pattern、description、enabled |
+
+扫描约定提示文案与 `2026-08-04-workbench-regex-whitelist-scan-design.md` 一致：仅启用规则；`folderName` 为根下第一层目录字面量（忽略大小写）；进入后递归，`filePattern` 只匹配文件名；多规则 OR。
 
 校验：`name`、`pattern` 必填；`pattern` 须能被 `new RegExp` 编译，否则提示「正则语法无效」。
 
@@ -119,3 +121,4 @@ src/apis/regex/
 - 2026-07-31：代码落地完成；路由设计文档已同步（`2026-07-30-routing-scaffold-design.md`）
 - 2026-08-04：真实后端联调见 `2026-08-04-regex-settings-api-integration-design.md`；API 目录改为 `src/apis/regexRules/**`，mock `src/apis/regex/**` 已移除
 - 2026-08-05：页面静态样式改为同级 `index.less` + CSS Module（见 css-module-less）
+- 2026-08-11：页头标题右侧增加扫描约定悬停提示（`QuestionCircleOutlined` + `Tooltip`）
