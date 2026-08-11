@@ -24,10 +24,21 @@ function Home() {
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <p className={styles.meta}>Fabric · 工作台</p>
-        <h1 className={styles.title}>欢迎使用 Fabric </h1>
+        <p className={styles.meta}>Fabric · 知识织物工作台</p>
+        <h1 className={styles.title}>
+          欢迎使用{' '}
+          <img
+            className={styles.brandMark}
+            src={`${import.meta.env.BASE_URL}fabricIcon.png`}
+            alt="Fabric"
+          />
+        </h1>
         <p className={styles.subtitle}>原文预览 · 文档分析 · 关系图谱</p>
-        <Link to="/workbench" className={styles.cta}>
+        <Link
+          to="/workbench"
+          className={styles.cta}
+          data-testid="home-enter-workbench"
+        >
           进入工作台
           <span className={styles.ctaArrow} aria-hidden>
             ↗
