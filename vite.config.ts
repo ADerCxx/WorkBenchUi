@@ -1,3 +1,4 @@
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,9 +52,11 @@ function lessAsCssModules(): Plugin {
   };
 }
 
+const useHttps = process.env.npm_lifecycle_event !== 'dev:http';
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [lessAsCssModules(), react()],
+  plugins: [lessAsCssModules(), react(), ...(useHttps ? [basicSsl()] : [])],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -65,6 +68,7 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
     proxy: {
       // VITE_API_URL 为空时，相对路径接口转到后端（按域名前缀扩展）
       '/regexRules': {
