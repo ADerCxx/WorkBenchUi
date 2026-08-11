@@ -21,7 +21,8 @@
 | File | Responsibility |
 |------|----------------|
 | `package.json` / lockfile | 增加 `react-router-dom` |
-| `src/router/index.tsx` | 路由表 + basename + 导出 `router` |
+| `src/router/index.tsx` | 路由表 + basename + 页面 `lazy`/`Suspense` + 导出 `router` |
+| `src/router/index.less` | 路由 chunk 加载中 fallback 居中 |
 | `src/main.tsx` | `RouterProvider` 挂载 |
 | `src/App.tsx` / `src/App.less` | Layout：导航 + Outlet |
 | `src/pages/Home/index.tsx` + `index.less` | 原 App 业务内容 |
@@ -214,40 +215,37 @@ export default App;
 - Create: `src/router/index.tsx`
 - Modify: `src/main.tsx`
 
-- [ ] **Step 1: 创建 router**
+- [ ] **Step 1: 创建 router（当前实现：页面 lazy + Layout 同步）**
 
 ```tsx
-import App from '@/App';
-import Demo from '@/pages/Demo';
-import Home from '@/pages/Home';
-import NotFound from '@/pages/NotFound';
+import FabricLoading from '@/components/FabricLoading';
+import BlankLayout from '@/layouts/BlankLayout';
+import MainLayout from '@/layouts/MainLayout';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import styles from './index.less';
 
-/**
- * 将 Vite BASE_URL 转为 react-router basename（无尾部斜杠；根路径不传）
- */
-function getBasename(): string | undefined {
-  const base = import.meta.env.BASE_URL;
-  if (!base || base === '/') {
-    return undefined;
-  }
-  return base.replace(/\/$/, '');
+const Home = lazy(() => import('@/pages/Home'));
+const RegexSettings = lazy(() => import('@/pages/RegexSettings'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
+const Workbench = lazy(() => import('@/pages/Workbench'));
+const BlankPlaceholder = lazy(() => import('@/pages/BlankPlaceholder'));
+
+function suspense(page: ReactNode) {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.fallback}>
+          <FabricLoading size="md" />
+        </div>
+      }
+    >
+      {page}
+    </Suspense>
+  );
 }
 
-export const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: <App />,
-      children: [
-        { index: true, element: <Home /> },
-        { path: 'demo', element: <Demo /> },
-        { path: '*', element: <NotFound /> },
-      ],
-    },
-  ],
-  { basename: getBasename() },
-);
+// createBrowserRouter：MainLayout / BlankLayout 同步；children 页面走 suspense(<Page />)
 ```
 
 - [ ] **Step 2: 更新 main.tsx**
@@ -305,3 +303,4 @@ Expected: `tsc -b` 与 `vite build` 成功。
 - 已删除 `src/pages/Demo`；勿再引用 `/demo`
 - 正则设置页无 antd，使用原生 `<table>` + 页面内常量模拟数据
 - 2026-08-05：NotFound 使用 CSS Module（`index.less`），勿再写 `style={{ padding: 24 }}`
+- 2026-08-11：业务页在 `src/router/index.tsx` 用 `React.lazy`；Layout 同步 import；fallback 为居中 `FabricLoading`（`src/router/index.less`）

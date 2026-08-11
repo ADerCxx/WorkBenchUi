@@ -8,7 +8,7 @@
 |----|------|
 | CSS 变量 / 字体栈定义 | `src/styles/index.global.less` |
 | 组件库 `fontFamily` 同步（若有） | `src/main.tsx`（与 `--sans` 字面量同步） |
-| 字体加载 | `index.html`（如 Google Fonts CDN，含 Noto Sans SC） |
+| 字体加载 | `src/styles/fonts.ts`（`@fontsource/*` 按字重 import；`main.tsx` 副作用引入） |
 
 ## 角色 ↔ 常见字体（仅定义处使用）
 

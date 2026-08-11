@@ -1,7 +1,7 @@
 # WorkBench 路由脚手架设计
 
 日期：2026-07-30  
-状态：已实现（2026-07-31 修订：业务路由；2026-08-03 修订：多 Layout 兄弟分支）
+状态：已实现（2026-07-31 修订：业务路由；2026-08-03 修订：多 Layout 兄弟分支；2026-08-11 修订：页面路由懒加载）
 
 ## 目标
 
@@ -15,7 +15,7 @@
 
 ## 非目标
 
-- 不做路由懒加载、`loader`/`action`
+- 不做路由 `loader`/`action`
 - 不做权限路由、菜单配置中心
 - 不改 Nginx/生产 rewrite 文档以外的部署工程（仅在实现说明中提示 History 模式需回退到 `index.html`）
 - 正则设置页 CRUD 详见 `2026-07-31-regex-settings-antd-crud-design.md`；真实接口联调见 `2026-08-04-regex-settings-api-integration-design.md`（本规格仅定义路由挂载）
@@ -66,16 +66,17 @@ src/
 
 - `main.tsx` 只负责 `StrictMode` + `ConfigProvider` + `RouterProvider`
 - `MainLayout` 提供顶部 `Link`（首页、工作台、正则设置）与 `<Outlet />`；`WorkbenchLayout` / `BlankLayout` 各自负责壳 UI 与 `<Outlet />`
-- 页面同步 import，暂不 `lazy` / `Suspense`
-- 路由级：MainLayout 下 `*` → NotFound；接口错误仍由首页现有 `useRequest` 逻辑处理
+- 业务页（Home / RegexSettings / NotFound / Workbench / BlankPlaceholder）使用 `React.lazy` + 路由级 `Suspense`；Layout（MainLayout / BlankLayout）保持同步 import
+- `Suspense` fallback 使用 `FabricLoading`（居中），见 `src/router/index.tsx` + `index.less`
+- 路由级：MainLayout 下 `*` → NotFound；接口错误仍由页面内请求逻辑处理
 - 正则设置页为 Antd 管理页，数据经 `src/apis/regexRules/**` 对接后端（见 `2026-08-04-regex-settings-api-integration-design.md`）
 
 ## 实现要点
 
 1. 已安装 `react-router-dom`
-2. `src/router/index.tsx` 导出 `router`
+2. `src/router/index.tsx` 导出 `router`；页面经 `lazy` 按需分 chunk
 3. Layout 导航指向业务路由
-4. 工作台仅占位；正则设置页为 Antd CRUD（筛选、分页、新建/编辑/删除、行内启停），数据对接 `/regexRules`
+4. 工作台为完整业务页；正则设置页为 Antd CRUD（筛选、分页、新建/编辑/删除、行内启停），数据对接 `/regexRules`
 
 ## 风险与约束
 
@@ -88,3 +89,4 @@ src/
 - 2026-07-31：正则页升级为 Antd CRUD Demo（见 `2026-07-31-regex-settings-antd-crud-design.md`）。
 - 2026-08-03：根 Layout 拆为 MainLayout / WorkbenchLayout / BlankLayout 兄弟分支；详见 `2026-08-03-multi-layout-design.md`。`App.tsx` 已删除。
 - 2026-08-05：NotFound 静态样式迁入同级 `index.less`（CSS Module）
+- 2026-08-11：业务页改为 `React.lazy` + `Suspense`（`FabricLoading` fallback）；Layout 仍同步加载；非目标中移除「不做路由懒加载」
