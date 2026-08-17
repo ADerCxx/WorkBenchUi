@@ -1,0 +1,60 @@
+---
+description: >-
+  WorkBench 纯函数 Vitest 约定：__tests__ 落盘、何时必补测、禁止为测试改业务代码。
+  改 src 下 .ts 逻辑或测试文件时加载。
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# Vitest 纯函数测试约定
+
+本仓为 **Vite 8 + React 19 + TypeScript** 脚手架演进体；单测层 **只用 Vitest + Node**，不测组件 DOM（无 jsdom / RTL，除非日后显式开启）。
+
+完整工作流见 Skill **`vitest-pure-fn`**。本 Rule 只列 **硬约束**。
+
+## 文件落盘
+
+| 项 | 约定 |
+| --- | --- |
+| 测试目录 | 与源码同模块下的 **`__tests__/`**（方案 B，目录清晰） |
+| 命名 | `*.test.ts`，与 `vitest.config.ts` 的 `include` 一致 |
+| import | 相对路径指向上级源码，如 `import { fn } from '../fn'` |
+| 禁止 | 源码旁并列 `foo.test.ts`（不用方案 A colocate） |
+
+```text
+src/pages/Workbench/scan/
+├── whitelistMatch.ts
+└── __tests__/
+    └── whitelistMatch.test.ts
+```
+
+## 何时必须补测 / 更新测
+
+- 新增或修改 **纯函数**（见 `vitest-pure-fn` 判定表）
+- 修复纯函数 bug
+- 改变纯函数对外行为（含边界、错误回退）
+
+以下 **不要求** Vitest：`*.tsx` 组件、hooks 编排、File System Access、SSE 页面流、axios 封装本身。
+
+## 写法硬约束
+
+- 使用显式 import：`describe` / `it` / `expect` from `vitest`（不用 globals）
+- 结构：**Arrange → Act → Assert**；一个 `it` 只验一件事
+- `describe` / `it` 描述 **行为**（可读作规格说明）
+- 纯函数测试 **优先零 mock**；逻辑应可抽到 `.ts` 再测
+- 表驱动边界用 `it.each`；避免脆弱快照
+
+## 禁止项（产品已拍板）
+
+- 不为测试改业务代码：禁止 `data-testid`、禁止 `window.__*_E2E__` 注入缝
+- 不引入 Playwright / Cypress 全路径 E2E（见 `docs/test/` 人工勾验）
+- 不在未开启 jsdom 前添加 `*.test.tsx`
+
+## 完成前验证
+
+向用户宣称纯函数改动 **完成** 前：
+
+1. `yarn test`（或 `yarn vitest run` 指向本次 `__tests__` 文件）
+2. 与 **`verify-after-edit`** 一致：`yarn lint`；涉及类型/构建时 `yarn build`
+
+未跑命令不得声称通过。Node **20+**（见 README）。

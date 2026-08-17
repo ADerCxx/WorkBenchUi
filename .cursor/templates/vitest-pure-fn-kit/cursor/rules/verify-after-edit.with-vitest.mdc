@@ -1,5 +1,5 @@
 ---
-description: Use when finishing WorkBench code changes — run lint/build before claiming done.
+description: Use when finishing code changes — run lint/test/build before claiming done.
 globs: src/**/*.{ts,tsx,js,jsx,mts,cts}
 alwaysApply: false
 ---
@@ -13,6 +13,6 @@ alwaysApply: false
 3. 若改动涉及类型、接口、`tsconfig`、构建入口或依赖，再执行 `yarn build`
 4. 用命令输出作为依据；未跑命令不得声称通过
 
-**不要：** 未经用户明确要求，全仓执行 `npm run lint:fix` 或 `npm run format`。
+**不要：** 未经用户明确要求，全仓执行 `yarn lint:fix` 或 `yarn format`。
 
-格式化靠 IDE / Prettier 即可；本规则管的是 **lint 与类型构建门禁**，不是「ESLint 初始化手册」。
+格式化靠 IDE / Prettier 即可；本规则管 **lint、单测与类型构建门禁**。
