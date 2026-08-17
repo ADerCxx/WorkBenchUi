@@ -7,6 +7,8 @@ import type { AnalysisPanelMode } from './components/AnalysisPanel/types';
 import CatalogSidebar from './components/CatalogSidebar';
 import PreviewPane from './components/PreviewPane';
 import WorkbenchHeader from './components/WorkbenchHeader';
+import { resolveSelectedContent } from './drop/resolveSelectedContent';
+import type { DroppedFile } from './drop/types';
 import styles from './index.less';
 import { buildTree } from './scan/buildTree';
 import { pickProjectRoot } from './scan/pickProjectRoot';
@@ -27,6 +29,7 @@ function Workbench() {
   const [rootName, setRootName] = useState<string | null>(null);
   const [files, setFiles] = useState<RawFile[]>([]);
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
+  const [droppedFile, setDroppedFile] = useState<DroppedFile | null>(null);
   const [emptyDescription, setEmptyDescription] =
     useState('未扫描到匹配的白名单文件');
   const [analysisMode, setAnalysisMode] = useState<AnalysisPanelMode | null>(
@@ -40,8 +43,11 @@ function Workbench() {
     [files],
   );
 
-  const selectedContent =
-    selectedPath !== null ? (contentByPath.get(selectedPath) ?? null) : null;
+  const selectedContent = resolveSelectedContent(
+    selectedPath,
+    droppedFile,
+    contentByPath,
+  );
   const analysisFileName = fileNameFromPath(selectedPath);
   const analysisFileContent = selectedContent ?? '';
 
@@ -59,6 +65,7 @@ function Workbench() {
         setRootName(handle.name);
         setHasPicked(true);
         setSelectedPath(null);
+        setDroppedFile(null);
         setEmptyDescription('无启用白名单规则');
         message.info('无可用白名单规则');
         return;
@@ -68,6 +75,7 @@ function Workbench() {
       setRootName(handle.name);
       setHasPicked(true);
       setSelectedPath(null);
+      setDroppedFile(null);
       setEmptyDescription('未扫描到匹配的白名单文件');
     } catch (err) {
       if (isAbortError(err)) return;
@@ -79,7 +87,13 @@ function Workbench() {
   }, []);
 
   const handleSelectFile = useCallback((path: string) => {
+    setDroppedFile(null);
     setSelectedPath(path);
+  }, []);
+
+  const handleDropFile = useCallback((file: DroppedFile) => {
+    setDroppedFile(file);
+    setSelectedPath(file.path);
   }, []);
 
   const handleOpenAnalysis = useCallback(() => {
@@ -111,7 +125,11 @@ function Workbench() {
           />
         </aside>
         <main className={styles.preview}>
-          <PreviewPane path={selectedPath} content={selectedContent} />
+          <PreviewPane
+            path={selectedPath}
+            content={selectedContent}
+            onDropFile={handleDropFile}
+          />
         </main>
       </div>
       {analysisMode !== null ? (
