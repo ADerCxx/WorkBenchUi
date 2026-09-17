@@ -31,6 +31,7 @@ dist-ssr
 
 .worktrees/
 .superpowers/
+.local-assets/
 # AI Log Plugin 推荐忽略项
 .specstory/
 .ailog/
