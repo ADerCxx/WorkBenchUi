@@ -19,10 +19,7 @@ function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
   return (
     <div className={rootClassName}>
       {matter ? (
-        <FrontmatterStrip
-          key={JSON.stringify(matter)}
-          matter={matter}
-        />
+        <FrontmatterStrip key={JSON.stringify(matter)} matter={matter} />
       ) : null}
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}

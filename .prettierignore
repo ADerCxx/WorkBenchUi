@@ -2,6 +2,9 @@ node_modules
 dist
 build
 coverage
+
+# 外部引入的技能包（由上游同步，不由本项目格式化）
+.agents/
 .next
 out
 pnpm-lock.yaml

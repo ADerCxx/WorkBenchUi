@@ -3,8 +3,8 @@ import styles from './index.less';
 import type { FeaturedKey, FrontmatterStripProps } from './types';
 import { FEATURED_KEYS } from './types';
 
-export type { FrontmatterStripProps } from './types';
 export { FEATURED_KEYS } from './types';
+export type { FrontmatterStripProps } from './types';
 
 function formatScalar(value: unknown): string {
   if (typeof value === 'boolean') {
@@ -65,9 +65,7 @@ function FrontmatterStrip({ matter }: FrontmatterStripProps) {
       {featuredEntries.map(([key, value]) => (
         <div key={key} className={styles.row}>
           <div className={styles.key}>{key}</div>
-          <div className={styles.value}>
-            {formatFeaturedValue(key, value)}
-          </div>
+          <div className={styles.value}>{formatFeaturedValue(key, value)}</div>
         </div>
       ))}
       {extraEntries.length > 0 ? (

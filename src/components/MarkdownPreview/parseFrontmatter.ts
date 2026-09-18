@@ -8,11 +8,7 @@ function stripBom(source: string): string {
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null &&
-    typeof value === 'object' &&
-    !Array.isArray(value)
-  );
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 /**

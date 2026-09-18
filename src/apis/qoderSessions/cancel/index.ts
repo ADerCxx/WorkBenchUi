@@ -19,9 +19,7 @@ export async function QoderSessionsCancelApi(id: string): Promise<boolean> {
       return res.data.data;
     }
 
-    return Promise.reject(
-      new Error(res.data.meta?.message ?? '操作失败'),
-    );
+    return Promise.reject(new Error(res.data.meta?.message ?? '操作失败'));
   } catch {
     return Promise.reject(new Error('网络异常'));
   }
