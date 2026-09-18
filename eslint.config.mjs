@@ -9,6 +9,9 @@ export default tseslint.config(
   {
     ignores: [
       '**/node_modules/**',
+      // 编辑器/AI 工具目录：含 hooks 脚本与模板 payload，非业务代码，
+      // 且 hooks 是 Node 脚本（用 process），按 browser globals 校验会误报 no-undef
+      '**/.cursor/**',
       '**/dist/**',
       '**/build/**',
       '**/coverage/**',
