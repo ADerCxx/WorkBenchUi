@@ -1,0 +1,17 @@
+---
+description: WorkBench 全局状态用 zustand；新建/修改 store 或在组件中订阅 store 时遵循 state-management-zustand skill。
+globs: src/stores/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Zustand 状态管理
+
+编辑 `src/stores` 下文件，或需要跨组件共享状态时：
+
+1. **先读并遵守**项目 Skill：`.cursor/skills/state-management-zustand/SKILL.md`
+2. 先过"该不该建 store"三关：不跨组件 / 不跨层级 / 不跨路由存活 → 用 `useState`，不建 store
+3. 订阅用**原子选择器**；多值必须包 `useShallow`；禁止 `useXxxStore()` 整个订阅
+4. action 定义在 store 内，组件只触发；更新保持不可变
+5. 服务端取数归 `api-request`，store 只存结果，不承担缓存策略
+
+目录结构以 `module-file-layout` 为准；store 内部写法以 `state-management-zustand` 为准。
