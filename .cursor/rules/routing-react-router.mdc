@@ -1,0 +1,18 @@
+---
+description: WorkBench 路由走 react-router v7 数据路由；新增/修改页面路由、跳转、404 或错误兜底时遵循 routing-react-router skill。
+globs: src/router/**,src/layouts/**,src/pages/**
+alwaysApply: false
+---
+
+# React Router 路由
+
+编辑 `src/router`、新增页面接入路由、写跳转或兜底页时：
+
+1. **先读并遵守**项目 Skill：`.cursor/skills/routing-react-router/SKILL.md`
+2. **每个顶层区域都要有 `* `兜底** —— 否则未知路径会掉到别的布局里渲染 404
+3. **每个持有 element 的路由都要配 `errorElement={<RouteError />}`** —— 缺了生产环境就是白屏
+4. **页面组件必须 `lazy`**；Suspense 由 Layout 的 `<Outlet />` 外层统一提供，不要逐个包
+5. 路径一律用 `PATHS` 常量，禁止 `<Link to="/xxx">` 字面量
+6. 每条叶子路由补 `handle: { title } satisfies RouteMeta`
+
+目录结构以 `module-file-layout` 为准；路由表写法以 `routing-react-router` 为准。
