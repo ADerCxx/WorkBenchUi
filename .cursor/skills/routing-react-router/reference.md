@@ -32,8 +32,8 @@
 | `/blank` | `BlankLayout` | BlankPlaceholder（index） | 占位页 |
 | `*`（根级） | — | NotFound | 安全网，理论上不可达 |
 
-> ⚠️ `src/layouts/WorkbenchLayout/` 目前**未被任何路由引用**（死代码）。
-> 工作台实际用的是 `BlankLayout`。是否切换到 WorkbenchLayout 属于业务决策，改动前先确认。
+> 历史记录：`src/layouts/WorkbenchLayout/` 曾存在但从未被路由引用（死代码），已于 2026-11-05 删除。
+> 工作台布局就是 `BlankLayout`，不需要额外的工作台专用布局。
 
 ## 文件清单（本 skill 改造后的落盘）
 

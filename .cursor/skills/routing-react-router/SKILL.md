@@ -70,7 +70,7 @@ src/router/
 
 ```tsx
 // ✅ 正确：每个区域各自兜底
-{ path: PATHS.workbench, element: <WorkbenchLayout />, children: [
+{ path: PATHS.workbench, element: <BlankLayout />, children: [
     { index: true, element: <Workbench /> },
     { path: '*', element: <NotFound /> },   // ← 本区域的未知路径留在本区域
 ]},
